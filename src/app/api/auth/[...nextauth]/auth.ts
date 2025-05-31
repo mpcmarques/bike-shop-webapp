@@ -84,6 +84,7 @@ const authOptions = {
       const user = await request.json();
 
       session.user = user;
+      session.accessToken = token.accessToken;
 
       return session;
     },

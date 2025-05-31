@@ -3,17 +3,17 @@
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 
-const Menu = () => {
+const Profile = () => {
   const { data: session } = useSession();
 
   return (
-    <div className="border border-red-300 w-full flex gap-4">
+    <div className="w-full flex gap-2">
       <Link href="/cart">Cart</Link>
 
       {session ? (
         <>
-          Signed in as {session.user?.email} <br />
           <Link href="/dashboard">Dashboard</Link>
+          Signed in as {session.user?.email} <br />
           <button onClick={() => signOut()}>Sign out</button>
         </>
       ) : (
@@ -23,4 +23,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default Profile;

@@ -25,14 +25,16 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ width: "100%", height: "100%" }}>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}
       >
         <NextAuthProvider>
-          <Menu />
+          <div className="h-full w-full flex flex-col gap-4">
+            <Menu />
 
-          {children}
+            <div className="h-full w-full">{children}</div>
+          </div>
         </NextAuthProvider>
       </body>
     </html>
