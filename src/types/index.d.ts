@@ -9,6 +9,15 @@ export interface ICategoryData extends ICategory {
   products: Array<IProductData>;
 }
 
+export interface IUserData {
+  email: string;
+  _id: string;
+  cart: {
+    total: number;
+    items: Array<IProductData>;
+  };
+}
+
 export interface IProduct {
   name: string;
   label: string;
@@ -17,6 +26,7 @@ export interface IProduct {
   category: string;
   listPrice: number;
   salesPrice: number;
+  stock: number;
 }
 
 export interface IProductData extends IProduct {

@@ -1,9 +1,9 @@
 "use server";
 
-import { ICategoryData } from "@/types";
+import { IProductData } from "@/types";
 
-export async function getCategory(name: string): Promise<ICategoryData | null> {
-  const response = await fetch(`http://localhost:3000/category/${name}`, {
+export async function getProduct(name: string): Promise<IProductData | null> {
+  const response = await fetch(`http://localhost:3000/product/${name}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

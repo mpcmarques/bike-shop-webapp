@@ -2,6 +2,7 @@
 
 import { createCategory } from "@/app/actions/createCategory";
 import { ICategory } from "@/types";
+import { useCallback } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 
 const NewCategoryForm = () => {
@@ -9,16 +10,16 @@ const NewCategoryForm = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ICategory>({});
 
-  const onSubmit: SubmitHandler<ICategory> = async (data) => {
+  const onSubmit: SubmitHandler<ICategory> = useCallback(async (data) => {
     console.log("Submitting form", data);
 
     const res = await createCategory(data);
 
     console.log("res", res);
-  };
+  }, []);
 
   return (
     <div className=" w-full p-8">

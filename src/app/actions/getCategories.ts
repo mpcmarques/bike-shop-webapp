@@ -11,7 +11,7 @@ export async function getCategories(): Promise<Array<ICategoryData>> {
   });
 
   if (response.ok) {
-    const data = response.json();
+    const data = await response.json();
 
     return data;
   }

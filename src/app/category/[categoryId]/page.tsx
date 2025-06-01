@@ -1,17 +1,17 @@
 import { getCategory } from "@/app/actions/getCategory";
+import Price from "@/components/price";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 export default async function CategoryPage({ params }) {
   const { categoryId } = await params;
+
+  if (!categoryId) return null;
 
   const category = await getCategory(categoryId);
 
   if (category == null) {
     return null;
   }
-
-  console.log(category);
 
   return (
     <div className="w-full h-full p-6 gap-4 flex flex-col">
@@ -21,7 +21,7 @@ export default async function CategoryPage({ params }) {
       <div className="grid grid-cols-5 w-full gap-4">
         {category.products.map((product) => (
           <Link
-            href={`/products/${product.name}`}
+            href={`/product/${product.name}`}
             key={product._id}
             className="border border-zinc-800 p-4 rounded bg-zinc-900 flex flex-col gap-4"
           >
@@ -36,23 +36,7 @@ export default async function CategoryPage({ params }) {
                 : product.description}
             </div>
 
-            <div className="flex gap-2">
-              {product.salesPrice !== product.listPrice ? (
-                <>
-                  <div className="text-green-700">
-                    ${product.salesPrice.toFixed(2)}
-                  </div>
-
-                  <div className="line-through text-zinc-500">
-                    ${product.listPrice.toFixed(2)}
-                  </div>
-                </>
-              ) : (
-                <div className="font-bold">
-                  ${product.salesPrice.toFixed(2)}
-                </div>
-              )}
-            </div>
+            <Price product={product} />
           </Link>
         ))}
       </div>

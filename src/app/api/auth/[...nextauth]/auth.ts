@@ -1,7 +1,8 @@
-import NextAuth from "next-auth";
+import { IUserData } from "@/types";
+import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-const authOptions = {
+const authOptions: NextAuthConfig = {
   // Configure one or more authentication providers
   providers: [
     CredentialsProvider({
@@ -41,19 +42,8 @@ const authOptions = {
 
         const { access_token } = await res.json();
 
-        // console.log("ACCESS_TOKEN", access_token);
-
         // If no error and we have user data, return it
         if (res.ok && access_token) {
-          // const cookieStore = await cookies();
-
-          // cookieStore.set("session", access_token, {
-          //   httpOnly: true,
-          //   secure: true,
-          //   sameSite: "lax",
-          //   path: "/",
-          // });
-
           return { access_token, email: credentials?.email };
         }
         // Return null if user data could not be retrieved

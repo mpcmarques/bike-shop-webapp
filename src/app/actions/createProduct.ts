@@ -18,7 +18,7 @@ export async function createProduct(data: IProduct) {
   });
 
   if (response.ok) {
-    const data = response.json();
+    const data = await response.json();
 
     return data;
   }
