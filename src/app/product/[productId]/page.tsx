@@ -3,6 +3,61 @@
 import { getProduct } from "@/app/actions/getProduct";
 import AddToCartButton from "@/components/addToCartButton";
 import Price from "@/components/price";
+import { IProductData, IProductDataWithVariants } from "@/types";
+import VariantSelector from "./VariantSelector";
+
+const ProductWithVariantDetails = ({
+  product,
+  currentVariant,
+}: {
+  product: IProductDataWithVariants;
+  currentVariant?: IProductData;
+}) => {
+  const selectedVariant =
+    currentVariant ||
+    product.variants
+      .sort((a, b) => (a.salesPrice < b.salesPrice ? -1 : 1))
+      .at(0);
+
+  if (selectedVariant)
+    return (
+      <>
+        <VariantSelector
+          masterProduct={product}
+          selectedVariant={selectedVariant}
+        />
+        <h2 className="text-xl">Stock: {selectedVariant.stock}</h2>
+        <Price product={selectedVariant} />
+        <AddToCartButton product={selectedVariant} />
+      </>
+    );
+
+  return <></>;
+};
+
+const ProductDetails = ({ product }: { product: IProductDataWithVariants }) => {
+  if (product.productType === "master" && product.variants.length > 0) {
+    return <ProductWithVariantDetails product={product} />;
+  } else if (
+    product.masterProduct &&
+    product.masterProduct.variants?.length > 0
+  ) {
+    return (
+      <ProductWithVariantDetails
+        product={product.masterProduct}
+        currentVariant={product}
+      />
+    );
+  }
+
+  return (
+    <>
+      <h2 className="text-xl">Stock: {product.stock}</h2>
+      <Price product={product} />
+      <AddToCartButton product={product} />
+    </>
+  );
+};
 
 export default async function Product({ params }) {
   const { productId } = await params;
@@ -23,13 +78,10 @@ export default async function Product({ params }) {
           <div className="flex flex-col gap-2 mb-8">
             <h1 className="text-2xl font-bold">{product.label}</h1>
             <h2 className="text-xl">{product.description}</h2>
-
-            <h2 className="text-xl">{product.stock}</h2>
           </div>
 
           <div className="w-full flex flex-col gap-4">
-            <Price product={product} />
-            <AddToCartButton product={product} />
+            <ProductDetails product={product} />
           </div>
         </div>
       </div>

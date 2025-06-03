@@ -1,4 +1,4 @@
-import { getCategory } from "@/app/actions/getCategory";
+import { getCategoryProducts } from "@/app/actions/getCategoryProducts";
 import Price from "@/components/price";
 import Link from "next/link";
 
@@ -7,7 +7,9 @@ export default async function CategoryPage({ params }) {
 
   if (!categoryId) return null;
 
-  const category = await getCategory(categoryId);
+  const category = await getCategoryProducts(categoryId, {
+    productType: "master",
+  });
 
   if (category == null) {
     return null;

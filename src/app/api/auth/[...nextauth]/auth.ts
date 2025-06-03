@@ -42,6 +42,8 @@ const authOptions: NextAuthConfig = {
 
         const { access_token } = await res.json();
 
+        console.log(access_token);
+
         // If no error and we have user data, return it
         if (res.ok && access_token) {
           return { access_token, email: credentials?.email };

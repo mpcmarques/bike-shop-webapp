@@ -1,8 +1,10 @@
 "use server";
 
-import { IProductData } from "@/types";
+import { IProductDataWithVariants } from "@/types";
 
-export async function getProduct(name: string): Promise<IProductData | null> {
+export async function getProduct(
+  name: string
+): Promise<IProductDataWithVariants | null> {
   const response = await fetch(`http://localhost:3000/product/${name}`, {
     method: "GET",
     headers: {
