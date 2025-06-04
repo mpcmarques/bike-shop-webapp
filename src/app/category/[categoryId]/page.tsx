@@ -7,13 +7,15 @@ export default async function CategoryPage({ params }) {
 
   if (!categoryId) return null;
 
-  const category = await getCategoryProducts(categoryId, {
+  const data = await getCategoryProducts(categoryId, {
     productType: "master",
   });
 
-  if (category == null) {
+  if (data == null) {
     return null;
   }
+
+  const { category, products } = data;
 
   return (
     <div className="w-full h-full p-6 gap-4 flex flex-col">
@@ -21,7 +23,7 @@ export default async function CategoryPage({ params }) {
       <h2 className="text-lg">{category.description}</h2>
 
       <div className="grid grid-cols-5 w-full gap-4">
-        {category.products.map((product) => (
+        {products.map((product) => (
           <Link
             href={`/product/${product.name}`}
             key={product._id}

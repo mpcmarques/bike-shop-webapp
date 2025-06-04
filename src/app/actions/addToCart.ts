@@ -9,7 +9,7 @@ export async function addToCart(data: IProductData) {
 
   if (!session) return;
 
-  const response = await fetch(`${API_URL}`, {
+  const response = await fetch(`${API_URL}/user/cart`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -20,8 +20,6 @@ export async function addToCart(data: IProductData) {
 
   if (response.ok) {
     const data = await response.json();
-
-    console.log("DATA", data);
 
     return data;
   }

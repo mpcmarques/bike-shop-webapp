@@ -1,6 +1,7 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { API_URL } from "@/app/lib/constants";
+import { redirect } from "next/navigation";
 
 const authOptions: NextAuthConfig = {
   // Configure one or more authentication providers
@@ -42,7 +43,7 @@ const authOptions: NextAuthConfig = {
 
         const { access_token } = await res.json();
 
-        console.log(access_token);
+        console.log("Access token", access_token);
 
         // If no error and we have user data, return it
         if (res.ok && access_token) {
@@ -75,10 +76,16 @@ const authOptions: NextAuthConfig = {
 
       const user = await request.json();
 
-      session.user = user;
-      session.accessToken = token.accessToken;
+      // If no error and we have user data, return it
+      if (request.ok && user) {
+        session.user = user;
+        session.accessToken = token.accessToken;
 
-      return session;
+        return session;
+      }
+
+      // Return null if user data could not be retrieved
+      return redirect("/login");
     },
   },
 };

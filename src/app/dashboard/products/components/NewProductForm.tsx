@@ -1,177 +1,11 @@
 "use client";
 
 import { createProduct } from "@/app/actions/createProduct";
-import { searchProducts } from "@/app/actions/searchProducts";
-import { ICategoryData, IProduct, IProductData } from "@/types";
-import { useState } from "react";
+import ProductSearch from "@/components/productSearch";
+import { ICategoryData, IProduct, IProductDataWithVariants } from "@/types";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useDebouncedCallback } from "use-debounce";
-
-const VariationAttributeSelector = ({
-  variationAttributes,
-  setVariationAttributes,
-}: {
-  variationAttributes?: Array<{
-    type: string;
-    value: string;
-  }>;
-  setVariationAttributes: (
-    value: Array<{
-      type: string;
-      value: string;
-    }>
-  ) => void;
-}) => {
-  return (
-    <div className="w-full flex flex-col gap-3">
-      <div className="flex w-full justify-between">
-        <label className="font-bold">Variation Attributes</label>
-
-        <button
-          disabled={
-            variationAttributes != null && variationAttributes.length >= 2
-          }
-          className="text-green-500 hover:cursor-pointer disabled:text-zinc-600 disabled:cursor-default"
-          onClick={(e) => {
-            e.preventDefault();
-
-            const newVariationAttributes =
-              variationAttributes != null ? variationAttributes?.slice() : [];
-
-            newVariationAttributes?.push({ type: "", value: "" });
-
-            setVariationAttributes(newVariationAttributes);
-          }}
-        >
-          Add
-        </button>
-      </div>
-
-      {variationAttributes?.map((variationAttribute, index) => (
-        <div
-          key={`variation-attribute-${index}`}
-          className="w-full grid grid-cols-12 gap-4"
-        >
-          <label>Type</label>
-
-          <select
-            className="border border-zinc-700 rounded text-white px-2 py-1 col-span-2"
-            value={variationAttribute.type}
-            onChange={(e) => {
-              const newVariationAttributes = variationAttributes.slice();
-
-              if (newVariationAttributes[index]) {
-                newVariationAttributes[index].type = e.target.value;
-              }
-
-              setVariationAttributes(newVariationAttributes);
-            }}
-          >
-            <option value="">Select Option</option>
-
-            <option value="color">Color</option>
-
-            <option value="size">Size</option>
-
-            <option value="finish">Finish</option>
-          </select>
-
-          <label>Value</label>
-
-          <input
-            className="border boder-zinc-800 rounded col-span-4"
-            value={variationAttribute.value}
-            onChange={(e) => {
-              const value = e.target.value;
-
-              const newVariationAttributes = variationAttributes.slice();
-
-              if (newVariationAttributes[index]) {
-                newVariationAttributes[index].value = value;
-              }
-
-              setVariationAttributes(newVariationAttributes);
-            }}
-          ></input>
-
-          <button
-            className="text-red-600 hover:text-red-500 hover:cursor-pointer"
-            onClick={(e) => {
-              e.preventDefault();
-
-              const newVariationAttributes = variationAttributes.filter(
-                (item, index2) => index2 !== index
-              );
-
-              setVariationAttributes(newVariationAttributes);
-            }}
-          >
-            Remove
-          </button>
-        </div>
-      ))}
-    </div>
-  );
-};
-
-const ProductSearch = ({
-  onChange,
-  productType,
-}: {
-  onChange: (value: IProductData) => void;
-  productType?: string;
-}) => {
-  const [text, setText] = useState("");
-  const [values, setValues] = useState<IProductData[]>([]);
-
-  const handleTextChange = useDebouncedCallback(async (text: string) => {
-    setText(text);
-
-    if (text.length > 2) {
-      const data = await searchProducts(
-        text,
-        productType ? { productType } : undefined
-      );
-
-      setValues(data || []);
-    }
-  }, 500);
-
-  return (
-    <div className="w-full">
-      <input
-        type="text"
-        onChange={(e) => {
-          const value = e.target.value;
-          setText(value);
-          handleTextChange(e.target.value);
-        }}
-        value={text}
-        className="border border-zinc-700 rounded text-white px-2 py-1 w-full"
-      />
-
-      {values.length > 0 && (
-        <div className="relative w-full">
-          <div className="absolute top-0 left-0 p-2 bg-zinc-600 w-full flex flex-col gap-2">
-            {values.map((product) => (
-              <div
-                key={product._id}
-                className="hover:cursor-pointer text-zinc-300 hover:text-zinc-100"
-                onClick={() => {
-                  setText("");
-                  onChange(product);
-                  setValues([]);
-                }}
-              >
-                <div>{product.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
+import VariationAttributeSelector from "./VariationAttributeSelector";
+import ComposedCombinationsSelector from "./ComposedCombinationsSelector";
 
 interface INewCategoryFormProps {
   categories: Array<ICategoryData>;
@@ -194,11 +28,10 @@ const NewCategoryForm: React.FC<INewCategoryFormProps> = ({ categories }) => {
     console.log("res", res);
   };
 
-  console.log(categories);
-
   const productType = watch("productType");
   const variationAttributes = watch("variationAttributes");
   const masterProduct = watch("masterProduct");
+  const composedCombinations = watch("composed");
 
   return (
     <div className=" w-full p-8">
@@ -251,10 +84,28 @@ const NewCategoryForm: React.FC<INewCategoryFormProps> = ({ categories }) => {
               ) : null}
 
               <ProductSearch
-                onChange={(value) => setValue("masterProduct", value)}
+                onChange={(value) =>
+                  setValue("masterProduct", value as IProductDataWithVariants)
+                }
                 productType="master"
               />
             </div>
+          </>
+        ) : null}
+
+        {productType === "composed" ? (
+          <>
+            <label className="font-bold">Combinations</label>
+
+            {masterProduct ? (
+              <div className="bg-zinc-700 px-4 py-2 border-zinc-600">
+                {masterProduct.label}
+              </div>
+            ) : null}
+            <ComposedCombinationsSelector
+              composed={composedCombinations}
+              setComposedCombinations={(value) => setValue("composed", value)}
+            />
           </>
         ) : null}
 

@@ -1,13 +1,13 @@
 "use server";
 
-import { ICategoryData, IProductData } from "@/types";
+import { ICategoryData } from "@/types";
 import { API_URL } from "../lib/constants";
 
-export async function getCategoryProducts(
+export async function searchCategory(
   name: string,
   queryString?: { [key: string]: string }
-): Promise<{ category: ICategoryData; products: IProductData[] } | null> {
-  const url = new URL(`${API_URL}/category/${name}/products`);
+): Promise<ICategoryData[] | null> {
+  const url = new URL(`${API_URL}/category/search/${name}`);
 
   if (queryString)
     Object.entries(queryString).map((param) => {
