@@ -1,9 +1,10 @@
 "use server";
 
 import { ICategoryData } from "@/types";
+import { API_URL } from "../lib/constants";
 
 export async function getCategory(name: string): Promise<ICategoryData | null> {
-  const response = await fetch(`http://localhost:3000/category/${name}`, {
+  const response = await fetch(`${API_URL}/category/${name}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

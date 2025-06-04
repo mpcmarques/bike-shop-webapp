@@ -3,9 +3,10 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { API_URL } from "../lib/constants";
 
 const signIn = cache(async (formData: FormData) => {
-  const request = await fetch("http://localhost:3000/auth/login", {
+  const request = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

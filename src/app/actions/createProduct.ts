@@ -2,13 +2,14 @@
 
 import { IProduct } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
+import { API_URL } from "../lib/constants";
 
 export async function createProduct(data: IProduct) {
   const session = await auth();
 
   if (!session) return;
 
-  const response = await fetch("http://localhost:3000/product", {
+  const response = await fetch(`${API_URL}/product`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

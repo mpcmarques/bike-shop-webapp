@@ -1,6 +1,6 @@
-import { IUserData } from "@/types";
 import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { API_URL } from "@/app/lib/constants";
 
 const authOptions: NextAuthConfig = {
   // Configure one or more authentication providers
@@ -29,7 +29,7 @@ const authOptions: NextAuthConfig = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        const res = await fetch("http://localhost:3000/auth/login", {
+        const res = await fetch(`${API_URL}/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -65,7 +65,7 @@ const authOptions: NextAuthConfig = {
     async session({ session, token }) {
       // console.log("session => ", session, token);
 
-      const request = await fetch("http://localhost:3000/auth/profile", {
+      const request = await fetch(`${API_URL}/auth/profile`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

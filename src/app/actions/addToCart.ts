@@ -1,5 +1,6 @@
 "use server";
 
+import { API_URL } from "../lib/constants";
 import { IProductData } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
 
@@ -8,7 +9,7 @@ export async function addToCart(data: IProductData) {
 
   if (!session) return;
 
-  const response = await fetch("http://localhost:3000/user/cart", {
+  const response = await fetch(`${API_URL}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -2,13 +2,14 @@
 
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { ICategory } from "@/types";
+import { API_URL } from "../lib/constants";
 
 export async function createCategory(data: ICategory) {
   const session = await auth();
 
   if (!session) return;
 
-  const response = await fetch("http://localhost:3000/category", {
+  const response = await fetch(`${API_URL}/category`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

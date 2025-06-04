@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { API_URL } from "../lib/constants";
 
 export const getProfile = async () => {
   const cookie = (await cookies()).get("session")?.value;
@@ -8,7 +9,7 @@ export const getProfile = async () => {
   if (!cookie) return null;
 
   try {
-    const request = await fetch("http://localhost:3000/auth/profile", {
+    const request = await fetch(`${API_URL}/auth/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

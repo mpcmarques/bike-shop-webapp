@@ -1,12 +1,13 @@
 "use server";
 
 import { IProductData } from "@/types";
+import { API_URL } from "../lib/constants";
 
 export async function searchProducts(
   name: string,
   queryString?: { [key: string]: string }
 ): Promise<IProductData[] | null> {
-  const url = new URL(`http://localhost:3000/product/search/${name}`);
+  const url = new URL(`${API_URL}/product/search/${name}`);
 
   if (queryString)
     Object.entries(queryString).map((param) => {

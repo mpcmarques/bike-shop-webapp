@@ -2,13 +2,14 @@
 
 import { IProductData } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
+import { API_URL } from "../lib/constants";
 
 export async function removeFromCart(data: IProductData) {
   const session = await auth();
 
   if (!session) return;
 
-  const response = await fetch("http://localhost:3000/user/cart", {
+  const response = await fetch(`${API_URL}/user/cart`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
