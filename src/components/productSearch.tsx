@@ -2,7 +2,7 @@
 
 import { searchProducts } from "@/app/actions/searchProducts";
 import { ICategoryData, IProductData } from "@/types";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 const ProductSearch = ({
@@ -30,6 +30,10 @@ const ProductSearch = ({
     }
   }, 500);
 
+  const handleBlur = useCallback(() => {
+    // setValues([]);
+  }, []);
+
   return (
     <div className="w-full">
       <input
@@ -41,6 +45,7 @@ const ProductSearch = ({
         }}
         value={text}
         className="border border-zinc-700 rounded text-white px-2 py-1 w-full"
+        onBlur={handleBlur}
       />
 
       {values.length > 0 && (

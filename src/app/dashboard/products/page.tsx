@@ -1,14 +1,17 @@
-import { getCategories } from "@/app/actions/getCategories";
-import NewCategoryForm from "./components/NewProductForm";
+import Link from "next/link";
+import ProductsTable from "./components/ProductsTable";
+import { getProducts } from "@/app/actions/getProducts";
 
 export default async function Categories() {
-  const categories = await getCategories();
+  const products = await getProducts({ limit: 30, skip: 0 });
 
   return (
-    <div className="flex flex-col h-full w-full">
-      <h2>Create New Product</h2>
+    <div className="flex flex-col h-full w-full gap-4">
+      <div className="flex gap-2">
+        <Link href={`/dashboard/products/new`}>Create New Product</Link>
+      </div>
 
-      <NewCategoryForm categories={categories} />
+      <ProductsTable products={products || []} />
     </div>
   );
 }

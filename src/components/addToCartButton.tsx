@@ -22,7 +22,7 @@ const AddToCartButton: React.FC<IAddToCartButton> = ({
 
   const handleAddToCart = () => {
     startTransition(async () => {
-      await addToCart(product);
+      await addToCart(product, 1);
       await update();
     });
   };

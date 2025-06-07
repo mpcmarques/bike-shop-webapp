@@ -1,9 +1,11 @@
 "use client";
 
-import AddToCartButton from "@/components/addToCartButton";
+import { addToCart } from "@/app/actions/addToCart";
 import Price from "@/components/price";
 import { ICategoryData, IComposedProductData, IProductData } from "@/types";
-import { useCallback, useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useCallback, useEffect, useMemo, useState, useTransition } from "react";
+import {  BiCartAdd } from "react-icons/bi";
 
 interface IComposedProductDetailsProps {
   product: IComposedProductData;
@@ -15,40 +17,77 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
   const composed = product.composed;
   const [possibleCombinations, setPossibleCombinations] = useState(composed);
   const [selectedProducts, setSelectedProducts] = useState<IProductData[]>([]);
+  const [price, setPrice] = useState(0);
+    const [isPending, startTransition] = useTransition();
+    const { update } = useSession();
+  
+    const handleAddToCart = useCallback((selectedProducts: IProductData[]) => {
+      startTransition(async () => {
+        await addToCart(product, 1, selectedProducts);
+        await update();
+      });
+    }, [product, update]);
 
-  const flatComposedArray = [...composed.flat()];
+  const flatComposedArray = useMemo(() => [...composed.flat()], [composed]);
 
-  const uniqueCategories = flatComposedArray
-    .slice()
-    .sort((a, b) =>
-      !a.category || !b.category
-        ? 0
-        : a.category?.name < b.category?.name
-        ? -1
-        : 1
-    )
-    .filter((item, pos, ary) => {
-      return !pos || item.category?.name !== ary[pos - 1].category?.name;
-    })
-    .map((data) => {
-      return data.category;
+  const uniqueCategories = useMemo(
+    () =>
+      flatComposedArray
+        .slice()
+        .sort((a, b) =>
+          !a.category || !b.category
+            ? 0
+            : a.category?.name < b.category?.name
+            ? -1
+            : 1
+        )
+        .filter((item, pos, ary) => {
+          return !pos || item.category?.name !== ary[pos - 1].category?.name;
+        })
+        .map((data) => {
+          return data.category;
+        }),
+    [flatComposedArray]
+  );
+
+  const uniqueProducts = useMemo(
+    () =>
+      flatComposedArray
+        .slice()
+        .sort((a, b) =>
+          !a.product || !b.product
+            ? 0
+            : a.product?.name < b.product?.name
+            ? -1
+            : 1
+        )
+        .filter((item, pos, ary) => {
+          return !pos || item.product?.name !== ary[pos - 1].product?.name;
+        })
+        .map((data) => {
+          return data.product;
+        }),
+    [flatComposedArray]
+  );
+
+  useEffect(() => {
+    if (selectedProducts.length === 0) {
+      setPrice(0);
+      return;
+    }
+
+    let price = 0;
+
+    selectedProducts.forEach((product) => {
+      price += product.salesPrice;
     });
 
-  const uniqueProducts = flatComposedArray
-    .slice()
-    .sort((a, b) =>
-      !a.product || !b.product ? 0 : a.product?.name < b.product?.name ? -1 : 1
-    )
-    .filter((item, pos, ary) => {
-      return !pos || item.product?.name !== ary[pos - 1].product?.name;
-    })
-    .map((data) => {
-      return data.product;
-    });
+    setPrice(price);
+  }, [selectedProducts]);
 
   const handleClick = useCallback(
     (
-      product: IProductData,
+      variant: IProductData,
       isAlreadySelected: boolean,
       possibleCombinations: {
         product: IProductData;
@@ -63,13 +102,15 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
       if (isAlreadySelected) {
         const newSelectedProducts = selectedProducts
           .slice()
-          .filter((selectedProduct) => selectedProduct._id !== product._id);
+          .filter((selectedProduct) => selectedProduct._id !== variant._id);
 
         let newPossibleCombinations = composed.slice();
 
         newSelectedProducts.forEach((selectedProduct) => {
           newPossibleCombinations = newPossibleCombinations.filter((value) =>
-            value.find((data) => data.product._id === selectedProduct._id)
+            value.find(
+              (data) => data.product._id === selectedProduct.masterProduct?._id
+            )
           );
         });
 
@@ -82,12 +123,13 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
         .slice()
         .filter((combination) => {
           return combination.find(
-            (productInComb) => productInComb.product._id === product._id
+            (productInComb) =>
+              productInComb.product._id === variant.masterProduct?._id
           );
         });
 
       setPossibleCombinations(newPossibleCombinations);
-      setSelectedProducts([...selectedProducts, product]);
+      setSelectedProducts([...selectedProducts, variant]);
     },
     []
   );
@@ -98,10 +140,22 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
       possibleCombinations: {
         product: IProductData;
         category: ICategoryData;
-      }[][]
+      }[][],
+      selectedProducts: IProductData[]
     ) => {
+      const alreadySelectedProductFromSameMaster =
+        selectedProducts.find(
+          (selectedProduct) =>
+            selectedProduct.masterProduct?._id === product.masterProduct?._id &&
+            selectedProduct._id !== product._id
+        ) != null;
+
+      if (alreadySelectedProductFromSameMaster) return false;
+
       const combination = possibleCombinations.find((combination) =>
-        combination.find((comb) => comb.product._id === product._id)
+        combination.find(
+          (comb) => comb.product._id === product.masterProduct?._id
+        )
       );
 
       return combination != null;
@@ -110,15 +164,15 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
   );
 
   const renderButton = useCallback(
-    (product: IProductData, selectedProducts: IProductData[]) => {
+    (variant: IProductData, selectedProducts: IProductData[]) => {
       const isAlreadySelected =
         selectedProducts.find(
-          (selectedProduct) => selectedProduct._id === product._id
+          (selectedProduct) => selectedProduct._id === variant._id
         ) != null;
 
       return (
         <button
-          key={`${product?._id}`}
+          key={`${variant?._id}`}
           className={`${
             isAlreadySelected
               ? "bg-zinc-500 hover:bg-zinc-600"
@@ -126,7 +180,7 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
           } flex flex-col gap-1 text-zinc-200 border-zinc-500 border px-4 py-2 rounded hover:cursor-pointer  transition-colors disabled:border-zinc-800 disabled:pointer-events-none disabled:text-zinc-800`}
           onClick={() => {
             handleClick(
-              product,
+              variant,
               isAlreadySelected,
               possibleCombinations,
               selectedProducts,
@@ -134,13 +188,23 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
             );
           }}
           disabled={
-            product.stock == 0 ||
-            !isCombinationPossible(product, possibleCombinations)
+            variant.stock == 0 ||
+            !isCombinationPossible(
+              variant,
+              possibleCombinations,
+              selectedProducts
+            )
           }
         >
-          <span>{product?.label}</span>
-          <span className="text-sm text-red-950 font-bold">
-            {product.stock === 0 ? "Out of Stock" : null}
+          <span>{variant?.label}</span>
+          <span className="text-sm">
+            {variant.stock === 0 ? (
+              <span className="text-sm text-red-950 font-bold">
+                Out of Stock
+              </span>
+            ) : (
+              <Price product={variant} />
+            )}
           </span>
         </button>
       );
@@ -148,7 +212,14 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
     [handleClick, isCombinationPossible, possibleCombinations, composed]
   );
 
-  console.log(uniqueProducts);
+  const checkIsDisabled = useCallback(() => {
+    if (possibleCombinations.length != 1) return true;
+
+    const filtered = possibleCombinations.slice()[0].filter((comb) => selectedProducts.find((selectedProduct) => comb.product._id === selectedProduct.masterProduct?._id))
+
+    return filtered.length !== possibleCombinations[0].length;
+    
+  }, [selectedProducts, possibleCombinations]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -156,16 +227,23 @@ const ComposedProductDetails: React.FC<IComposedProductDetailsProps> = ({
         <div key={category?._id} className="flex flex-col gap-2">
           <div className="text-xl font-bold">{category?.label}</div>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-5 gap-4">
             {uniqueProducts
               .filter((a) => a?.category === category?._id)
-              .map((product) => renderButton(product, selectedProducts))}
+              .map((product) =>
+                product.variants?.map((variant) =>
+                  renderButton(variant, selectedProducts)
+                )
+              )}
           </div>
         </div>
       ))}
 
-      <Price product={product} />
-      <AddToCartButton product={product} />
+      <div className="flex gap-4">
+        <div className="font-bold">${price.toFixed(2)}</div>
+      </div>
+
+      <button className="btn-default" disabled={isPending || checkIsDisabled()} onClick={() => handleAddToCart(selectedProducts)}>{isPending ? <span>Adding to Cart...</span> : <><BiCartAdd /><span>Add to Cart</span></>}</button>
     </div>
   );
 };

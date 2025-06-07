@@ -2,31 +2,50 @@
 
 import { createProduct } from "@/app/actions/createProduct";
 import ProductSearch from "@/components/productSearch";
-import { ICategoryData, IProduct, IProductDataWithVariants } from "@/types";
+import {
+  ICategoryData,
+  IProduct,
+  IProductData,
+  IProductDataWithVariants,
+} from "@/types";
 import { SubmitHandler, useForm } from "react-hook-form";
 import VariationAttributeSelector from "./VariationAttributeSelector";
 import ComposedCombinationsSelector from "./ComposedCombinationsSelector";
+import { useCallback } from "react";
+import { updateProduct } from "@/app/actions/updateProduct";
 
-interface INewCategoryFormProps {
+interface IEditProductFormProps {
+  product?: IProductData;
   categories: Array<ICategoryData>;
 }
 
-const NewCategoryForm: React.FC<INewCategoryFormProps> = ({ categories }) => {
+const EditProductForm: React.FC<IEditProductFormProps> = ({
+  product,
+  categories,
+}) => {
   const {
     register,
     handleSubmit,
     watch,
     setValue,
-    formState: { errors },
-  } = useForm<IProduct>({});
+    formState: { errors, isSubmitting },
+  } = useForm<IProduct>({
+    defaultValues: product,
+  });
 
-  const onSubmit: SubmitHandler<IProduct> = async (data) => {
-    console.log("Submitting form", data);
+  const onSubmit: SubmitHandler<IProduct> = useCallback(
+    async (data) => {
+      console.log("Submitting form", data);
 
-    const res = await createProduct(data);
+      if (product) {
+        await updateProduct(data);
+        return;
+      }
 
-    console.log("res", res);
-  };
+      await createProduct(data);
+    },
+    [product]
+  );
 
   const productType = watch("productType");
   const variationAttributes = watch("variationAttributes");
@@ -116,23 +135,35 @@ const NewCategoryForm: React.FC<INewCategoryFormProps> = ({ categories }) => {
 
         <label className="font-bold">List Price</label>
         <input
-          type="text"
+          type="number"
           {...register("listPrice")}
           className="border border-zinc-700 rounded text-white px-2 py-1"
         />
         <label className="font-bold">Sales Price</label>
         <input
-          type="text"
+          type="number"
           {...register("salesPrice")}
           className="border border-zinc-700 rounded text-white px-2 py-1"
         />
 
-        <button type="submit" className="bg-blue-600 rounded-xl px-4 py-2">
-          Create
+        <label className="font-bold">Stock</label>
+        <input
+          type="number"
+          {...register("stock")}
+          step={1}
+          className="border border-zinc-700 rounded text-white px-2 py-1"
+        />
+
+        <button
+          type="submit"
+          className="bg-blue-600 rounded-xl px-4 py-2 hover:bg-blue-500 hover:cursor-pointer disabled:bg-blue-900 disabled:pointer-events-none"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? "Submitting..." : product ? "Update" : "Create"}
         </button>
       </form>
     </div>
   );
 };
 
-export default NewCategoryForm;
+export default EditProductForm;

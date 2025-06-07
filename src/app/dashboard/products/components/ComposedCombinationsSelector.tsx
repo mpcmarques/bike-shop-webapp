@@ -3,7 +3,6 @@
 import CategorySearch from "@/components/categorySearch";
 import ProductSearch from "@/components/productSearch";
 import { ICategoryData, IProductData } from "@/types";
-import { useState } from "react";
 import { BiPlus, BiX } from "react-icons/bi";
 
 interface IComposedCombinationsSelectorProps {
@@ -26,8 +25,6 @@ interface IComposedCombinationsSelectorProps {
 const ComposedCombinationsSelector: React.FC<
   IComposedCombinationsSelectorProps
 > = ({ composed, setComposedCombinations }) => {
-  console.log(composed);
-
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
@@ -128,12 +125,15 @@ const ComposedCombinationsSelector: React.FC<
                     ) : (
                       <ProductSearch
                         category={value.category}
+                        productType="master"
                         onChange={(product) => {
                           const newValues = composed.slice();
+
                           newValues[index][combinationIndex] = {
                             ...newValues[index][combinationIndex],
                             product: product,
                           };
+
                           setComposedCombinations(newValues);
                         }}
                       />
