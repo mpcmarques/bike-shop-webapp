@@ -30,10 +30,12 @@ export interface IProduct {
   masterProduct?: IProductDataWithVariants;
   variationAttributes?: Array<{ type: string; value: string }>;
   variants?: IProductData[];
-  composed?: {
-    category: ICategoryData;
-    products: IProductData;
-  };
+  composed?: Array<
+    Array<{
+      category?: ICategoryData;
+      product?: IProductData;
+    }>
+  >;
 }
 
 export interface IProductData extends IProduct {
@@ -42,4 +44,8 @@ export interface IProductData extends IProduct {
 
 interface IProductDataWithVariants extends IProductData {
   variants: IProductData[];
+}
+
+interface IComposedProductData extends IProductData {
+  composed: Array<Array<{ product: IProductData; category: ICategoryData }>>;
 }

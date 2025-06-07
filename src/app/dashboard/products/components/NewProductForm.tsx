@@ -95,15 +95,8 @@ const NewCategoryForm: React.FC<INewCategoryFormProps> = ({ categories }) => {
 
         {productType === "composed" ? (
           <>
-            <label className="font-bold">Combinations</label>
-
-            {masterProduct ? (
-              <div className="bg-zinc-700 px-4 py-2 border-zinc-600">
-                {masterProduct.label}
-              </div>
-            ) : null}
             <ComposedCombinationsSelector
-              composed={composedCombinations}
+              composed={composedCombinations || []}
               setComposedCombinations={(value) => setValue("composed", value)}
             />
           </>

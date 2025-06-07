@@ -3,8 +3,13 @@
 import { getProduct } from "@/app/actions/getProduct";
 import AddToCartButton from "@/components/addToCartButton";
 import Price from "@/components/price";
-import { IProductData, IProductDataWithVariants } from "@/types";
+import {
+  IComposedProductData,
+  IProductData,
+  IProductDataWithVariants,
+} from "@/types";
 import VariantSelector from "./VariantSelector";
+import ComposedProductDetails from "./ComposedProductDetails";
 
 const ProductWithVariantDetails = ({
   product,
@@ -36,6 +41,10 @@ const ProductWithVariantDetails = ({
 };
 
 const ProductDetails = ({ product }: { product: IProductDataWithVariants }) => {
+  if (product.productType === "composed") {
+    return <ComposedProductDetails product={product as IComposedProductData} />;
+  }
+
   if (product.productType === "master" && product.variants.length > 0) {
     return <ProductWithVariantDetails product={product} />;
   } else if (

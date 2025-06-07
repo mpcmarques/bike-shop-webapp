@@ -8,7 +8,7 @@ export default async function CategoryPage({ params }) {
   if (!categoryId) return null;
 
   const data = await getCategoryProducts(categoryId, {
-    productType: "master",
+    productType: ["master", "composed"],
   });
 
   if (data == null) {

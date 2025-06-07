@@ -1,16 +1,18 @@
 "use client";
 
 import { searchProducts } from "@/app/actions/searchProducts";
-import { IProductData } from "@/types";
+import { ICategoryData, IProductData } from "@/types";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 
 const ProductSearch = ({
   onChange,
   productType,
+  category,
 }: {
   onChange: (value: IProductData) => void;
   productType?: string;
+  category?: ICategoryData;
 }) => {
   const [text, setText] = useState("");
   const [values, setValues] = useState<IProductData[]>([]);
@@ -19,10 +21,10 @@ const ProductSearch = ({
     setText(text);
 
     if (text.length > 2) {
-      const data = await searchProducts(
-        text,
-        productType ? { productType } : undefined
-      );
+      const data = await searchProducts(text, {
+        productType: productType,
+        category: category?._id,
+      });
 
       setValues(data || []);
     }
@@ -43,7 +45,7 @@ const ProductSearch = ({
 
       {values.length > 0 && (
         <div className="relative w-full">
-          <div className="absolute top-0 left-0 p-2 bg-zinc-600 w-full flex flex-col gap-2">
+          <div className="absolute top-0 left-0 p-2 bg-zinc-600 w-full flex flex-col gap-2 z-10">
             {values.map((product) => (
               <div
                 key={product._id}

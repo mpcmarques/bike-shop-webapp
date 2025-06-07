@@ -5,13 +5,17 @@ import { API_URL } from "../lib/constants";
 
 export async function getCategoryProducts(
   name: string,
-  queryString?: { [key: string]: string }
+  queryString?: { [key: string]: string | string[] }
 ): Promise<{ category: ICategoryData; products: IProductData[] } | null> {
   const url = new URL(`${API_URL}/category/${name}/products`);
 
   if (queryString)
     Object.entries(queryString).map((param) => {
-      url.searchParams.append(param[0], param[1]);
+      if (Array.isArray(param[1])) {
+        param[1].forEach((value) => url.searchParams.append(param[0], value));
+      } else {
+        url.searchParams.append(param[0], param[1]);
+      }
     });
 
   const response = await fetch(url, {
@@ -20,6 +24,8 @@ export async function getCategoryProducts(
       "Content-Type": "application/json",
     },
   });
+
+  console.log(response);
 
   if (response.ok) {
     const data = await response.json();
