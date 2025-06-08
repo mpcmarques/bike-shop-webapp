@@ -12,6 +12,7 @@ export interface ICategoryData extends ICategory {
 export interface IUserData {
   email: string;
   _id: string;
+  roles: Array<"user" | "admin">;
   cart: {
     total: number;
     items: Array<{
