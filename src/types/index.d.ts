@@ -14,7 +14,11 @@ export interface IUserData {
   _id: string;
   cart: {
     total: number;
-    items: Array<IProductData>;
+    items: Array<{
+      product: IProductData;
+      combination: Array<IProductData>;
+      quantity: number;
+    }>;
   };
 }
 

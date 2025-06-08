@@ -4,6 +4,7 @@ import { removeFromCart } from "@/app/actions/removeFromCart";
 import { IProductData } from "@/types";
 import { useSession } from "next-auth/react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useTransition } from "react";
+import { BiX } from "react-icons/bi";
 
 interface IRemoveFromCartButton
   extends DetailedHTMLProps<
@@ -34,7 +35,7 @@ const RemoveFromCartButton: React.FC<IRemoveFromCartButton> = ({
       {...others}
       onClick={handleRemoveFromCart}
     >
-      Remove
+      <BiX />
     </button>
   );
 };

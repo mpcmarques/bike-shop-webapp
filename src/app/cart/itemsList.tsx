@@ -2,28 +2,53 @@
 
 import Price from "@/components/price";
 import RemoveFromCartButton from "@/components/removeFromCartButton";
+import { IUserData } from "@/types";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 const ItemsList = () => {
   const { data: session } = useSession();
 
+  const user = session?.user as IUserData;
+  console.log(session);
+
   return (
-    <div className="w-full">
-      {session?.user?.cart.items.map((item, index) => (
+    <div className="w-full flex flex-col gap-2">
+      {user?.cart.items.map((item, index) => (
         <div
-          key={item._id + index}
-          className="bg-zinc-800 p-2 flex gap-4 rounded justify-between"
+          key={item.product._id + index}
+          className="bg-zinc-800 grid grid-cols-16 p-4"
         >
-          <div className="flex gap-4">
-            <div className="bg-gray-500 w-12 h-12"></div>
+          <div className="bg-gray-500 w-12 h-12 col-span-1"></div>
+          <div className="flex flex-col gap-5 justify-center col-span-12">
             <div>
-              <Link href={`/product/${item.name}`}>{item.label}</Link>
-              <Price product={item} />
+              <Link href={`/product/${item.product.name}`}>
+                {item.product.label}
+              </Link>
             </div>
+            {item.combination ? (
+              <div className="grid grid-cols-7 gap-2">
+                {item.combination.map((combinationItem) => (
+                  <div
+                    key={combinationItem._id}
+                    className="p-2 border border-zinc-700 rounded text-xs"
+                  >
+                    <div>{combinationItem.label}</div>
+                  </div>
+                ))}
+              </div>
+            ) : null}
           </div>
 
-          <RemoveFromCartButton product={item} />
+          <div className="col-span-2 flex items-center">
+            <Price
+              product={item.product}
+              quantity={item.quantity}
+              combination={item.combination}
+            />
+          </div>
+
+          <RemoveFromCartButton product={item.product} />
         </div>
       ))}
     </div>
