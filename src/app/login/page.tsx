@@ -13,17 +13,13 @@ const Login = () => {
   } = useForm<{ email: string; password: string }>({});
 
   const onSubmit: SubmitHandler<{ email: string; password: string }> = async (
-    data
+    data,
   ) => {
-    console.log("Submitting form", data);
-
-    const res = await signIn("credentials", {
+    await signIn("credentials", {
       email: data.email,
       password: data.password,
       redirect: false,
     });
-
-    console.log("res", res);
   };
 
   return (

@@ -16,8 +16,6 @@ const Price = ({
     [product, quantity, combination],
   );
 
-  console.log(price);
-
   return (
     <div className="flex gap-4">
       {product.salesPrice !== product.listPrice ? (

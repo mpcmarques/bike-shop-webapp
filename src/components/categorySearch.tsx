@@ -19,8 +19,6 @@ const CategorySearch = ({
     if (text.length > 2) {
       const data = await searchCategory(text);
 
-      console.log("data", data);
-
       setValues(data || []);
     }
   }, 500);

@@ -10,6 +10,7 @@ import {
 } from "@/types";
 import VariantSelector from "./VariantSelector";
 import ComposedProductDetails from "./ComposedProductDetails";
+import Image from "next/image";
 
 const ProductWithVariantDetails = ({
   product,
@@ -82,7 +83,14 @@ export default async function Product({ params }) {
   return (
     <div className="p-8 h-full w-full">
       <div className="grid grid-cols-2">
-        <div className="bg-gray-500 w-64 h-64"></div>
+        <div className="bg-gray-500 w-72 h-72 relative rounded overflow-clip">
+          <Image
+            fill={true}
+            src={`${product.image ? product.image : "https://picsum.photos/200"}`}
+            alt={product.label}
+            loading="lazy"
+          />
+        </div>
         <div className="border-zinc-800 bg-zinc-900 border p-6 rounded flex flex-col">
           <div className="flex flex-col gap-2 mb-8">
             <h1 className="text-2xl font-bold">{product.label}</h1>

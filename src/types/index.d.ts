@@ -31,6 +31,7 @@ export interface IProduct {
   category: string;
   listPrice: number;
   salesPrice: number;
+  image: string;
   stock: number;
   masterProduct?: IProductDataWithVariants;
   variationAttributes?: Array<{ type: string; value: string }>;

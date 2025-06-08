@@ -5,7 +5,7 @@ import { API_URL } from "../lib/constants";
 
 export async function getCategoryProducts(
   name: string,
-  queryString?: { [key: string]: string | string[] }
+  queryString?: { [key: string]: string | string[] },
 ): Promise<{ category: ICategoryData; products: IProductData[] } | null> {
   const url = new URL(`${API_URL}/category/${name}/products`);
 
@@ -24,8 +24,6 @@ export async function getCategoryProducts(
       "Content-Type": "application/json",
     },
   });
-
-  console.log(response);
 
   if (response.ok) {
     const data = await response.json();

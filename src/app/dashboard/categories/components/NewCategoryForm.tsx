@@ -14,11 +14,7 @@ const NewCategoryForm = () => {
   } = useForm<ICategory>({});
 
   const onSubmit: SubmitHandler<ICategory> = useCallback(async (data) => {
-    console.log("Submitting form", data);
-
-    const res = await createCategory(data);
-
-    console.log("res", res);
+    await createCategory(data);
   }, []);
 
   return (

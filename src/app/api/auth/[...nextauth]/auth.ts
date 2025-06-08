@@ -23,7 +23,6 @@ const authOptions: NextAuthConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        // console.log("CREDENTIALS", credentials);
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -42,8 +41,6 @@ const authOptions: NextAuthConfig = {
         });
 
         const { access_token } = await res.json();
-
-        console.log("Access token", access_token);
 
         // If no error and we have user data, return it
         if (res.ok && access_token) {
@@ -64,8 +61,6 @@ const authOptions: NextAuthConfig = {
       return token;
     },
     async session({ session, token }) {
-      // console.log("session => ", session, token);
-
       const request = await fetch(`${API_URL}/auth/profile`, {
         method: "GET",
         headers: {

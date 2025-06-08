@@ -8,13 +8,11 @@ import { redirect } from "next/navigation";
 export async function addToCart(
   data: IProductData,
   quantity: number,
-  combination?: IProductData[]
+  combination?: IProductData[],
 ) {
   const session = await auth();
 
   if (!session) return redirect("/login");
-
-  console.log(data, quantity, combination);
 
   const response = await fetch(`${API_URL}/user/cart`, {
     method: "POST",
@@ -24,8 +22,6 @@ export async function addToCart(
     },
     body: JSON.stringify({ productId: data._id, quantity, combination }),
   });
-
-  console.log(response);
 
   if (response.ok) {
     const data = await response.json();

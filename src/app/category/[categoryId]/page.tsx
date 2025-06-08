@@ -1,5 +1,6 @@
 import { getCategoryProducts } from "@/app/actions/getCategoryProducts";
 import Price from "@/components/price";
+import Image from "next/image";
 import Link from "next/link";
 
 export default async function CategoryPage({ params }) {
@@ -30,7 +31,14 @@ export default async function CategoryPage({ params }) {
             className="border border-zinc-800 p-4 rounded bg-zinc-900 flex flex-col gap-4"
           >
             <div className="flex items-center justify-center w-full h-full">
-              <div className="bg-gray-400 w-48 h-48 rounded-xl"></div>
+              <div className="bg-gray-400 w-48 h-48 rounded-xl relative">
+                <Image
+                  fill={true}
+                  src={`${product.image ? product.image : "https://picsum.photos/200"}`}
+                  alt={product.label}
+                  loading="lazy"
+                />
+              </div>
             </div>
 
             <div className="text-xl font-bold">{product.label}</div>

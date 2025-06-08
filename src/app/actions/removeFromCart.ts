@@ -21,8 +21,6 @@ export async function removeFromCart(data: IProductData) {
   if (response.ok) {
     const data = await response.json();
 
-    console.log("DATA", data);
-
     return data;
   }
 
