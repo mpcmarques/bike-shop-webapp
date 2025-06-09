@@ -3,13 +3,15 @@
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { BiDoorOpen, BiKey, BiMailSend } from "react-icons/bi";
+import { redirect } from "next/navigation";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<{ email: string; password: string }>({});
 
   const onSubmit: SubmitHandler<{ email: string; password: string }> = async (
@@ -20,17 +22,52 @@ const Login = () => {
       password: data.password,
       redirect: false,
     });
+
+    redirect("/");
   };
 
   return (
-    <div className="bg-green-500 w-full p-8">
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-        <input type="email" {...register("email")} />
-        <input type="password" {...register("password")} />
-        <button type="submit">Sign In</button>
-      </form>
+    <div className="w-full flex justify-center items-center pt-48">
+      <div className="w-2xl max-w-3xl p-8 gap-4 border border-zinc-700 bg-zinc-800 rounded">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4 mb-4"
+        >
+          <label className="flex gap-2 items-center">
+            <BiMailSend /> E-Mail
+          </label>
+          <input
+            type="email"
+            {...register("email")}
+            className="input-default"
+          />
 
-      <Link href="/signup">Sign Up</Link>
+          <label className="flex gap-2 items-center">
+            <BiKey /> Password
+          </label>
+          <input
+            type="password"
+            {...register("password")}
+            className="input-default"
+          />
+          <button type="submit" className="btn-default" disabled={isSubmitting}>
+            {!isSubmitting ? (
+              <>
+                <BiDoorOpen /> Sign In
+              </>
+            ) : (
+              <>Loggin In</>
+            )}
+          </button>
+        </form>
+
+        <Link
+          href="/signup"
+          className="underline hover:text-cyan-500 transition-colors"
+        >
+          Sign Up
+        </Link>
+      </div>
     </div>
   );
 };
