@@ -26,7 +26,7 @@ export default async function CategoryPage({ params }) {
   }
 
   return (
-    <div className="w-full h-full p-6 gap-4 flex flex-col pt-28">
+    <div className="w-full h-full p-8 gap-4 flex flex-col pt-28">
       <h1 className="text-2xl">{category.label}</h1>
       <h2 className="text-lg">{category.description}</h2>
 
@@ -38,7 +38,7 @@ export default async function CategoryPage({ params }) {
             className="border border-zinc-800 p-4 rounded bg-zinc-900 flex flex-col gap-4"
           >
             <div className="flex items-center justify-center w-full h-full">
-              <div className="bg-gray-400 w-48 h-48 rounded-xl relative">
+              <div className="bg-gray-400 w-48 h-48 rounded-xl relative overflow-clip">
                 <Image
                   fill={true}
                   src={`${product.image ? product.image : "https://picsum.photos/200"}`}
@@ -54,8 +54,6 @@ export default async function CategoryPage({ params }) {
                 ? product.description.substring(0, 100) + "..."
                 : product.description}
             </div>
-
-            <Price product={product} />
           </Link>
         ))}
       </div>

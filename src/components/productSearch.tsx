@@ -3,6 +3,7 @@
 import { searchProducts } from "@/app/actions/searchProducts";
 import { ICategoryData, IProductData } from "@/types";
 import { useCallback, useState } from "react";
+import { BiSearch } from "react-icons/bi";
 import { useDebouncedCallback } from "use-debounce";
 
 const ProductSearch = ({
@@ -27,6 +28,8 @@ const ProductSearch = ({
       });
 
       setValues(data || []);
+    } else {
+      setValues([]);
     }
   }, 500);
 
@@ -36,17 +39,20 @@ const ProductSearch = ({
 
   return (
     <div className="w-full">
-      <input
-        type="text"
-        onChange={(e) => {
-          const value = e.target.value;
-          setText(value);
-          handleTextChange(e.target.value);
-        }}
-        value={text}
-        className="border border-zinc-700 rounded text-white px-2 py-1 w-full"
-        onBlur={handleBlur}
-      />
+      <div className="border border-zinc-700 rounded text-white px-2 py-1 w-full flex gap-4 items-center">
+        <BiSearch />
+        <input
+          type="text"
+          onChange={(e) => {
+            const value = e.target.value;
+            setText(value);
+            handleTextChange(e.target.value);
+          }}
+          value={text}
+          className="bg-transparent border-transparent outline-none w-full"
+          onBlur={handleBlur}
+        />
+      </div>
 
       {values.length > 0 && (
         <div className="relative w-full">

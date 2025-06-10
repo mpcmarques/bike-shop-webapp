@@ -4,7 +4,7 @@ import { getProducts } from "@/app/actions/getProducts";
 import { BiPlus } from "react-icons/bi";
 
 export default async function Categories() {
-  const products = await getProducts({ limit: 30, skip: 0 });
+  const products = await getProducts();
 
   return (
     <div className="flex flex-col h-full w-full gap-4">

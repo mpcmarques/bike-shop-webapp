@@ -11,7 +11,7 @@ export default async function Cart() {
   }
 
   return (
-    <div className="p-6 flex flex-col gap-4 pt-22">
+    <div className="p-8 flex flex-col gap-4 pt-28">
       <h1 className="text-2xl">Cart</h1>
 
       <div className="grid grid-cols-6 gap-4">

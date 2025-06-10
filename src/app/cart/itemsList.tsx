@@ -4,6 +4,7 @@ import Price from "@/components/price";
 import RemoveFromCartButton from "@/components/removeFromCartButton";
 import { IUserData } from "@/types";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 
 const ItemsList = () => {
@@ -19,7 +20,14 @@ const ItemsList = () => {
             key={item.product._id + index}
             className="bg-zinc-800 grid grid-cols-16 p-4"
           >
-            <div className="bg-gray-500 w-12 h-12 col-span-1"></div>
+            <div className="bg-gray-500 w-12 h-12 col-span-1 relative">
+              <Image
+                fill={true}
+                src={`${item.product.image ? item.product.image : "https://picsum.photos/200"}`}
+                alt={item.product.label}
+                loading="lazy"
+              />
+            </div>
             <div className="flex flex-col gap-5 justify-center col-span-12">
               <div>
                 <Link href={`/product/${item.product.name}`}>
@@ -40,7 +48,7 @@ const ItemsList = () => {
               ) : null}
             </div>
 
-            <div className="col-span-2 flex items-center">
+            <div className="col-span-2 flex justify-end items-center">
               <Price
                 product={item.product}
                 quantity={item.quantity}
@@ -48,7 +56,9 @@ const ItemsList = () => {
               />
             </div>
 
-            <RemoveFromCartButton product={item.product} />
+            <div className="flex justify-end items-center">
+              <RemoveFromCartButton product={item.product} />
+            </div>
           </div>
         ))
       ) : (
