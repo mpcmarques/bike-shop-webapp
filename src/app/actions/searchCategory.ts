@@ -1,12 +1,11 @@
 "use server";
 
-import { ICategoryData } from "@/types";
 import { API_URL } from "../lib/constants";
 
 export async function searchCategory(
   name: string,
-  queryString?: { [key: string]: string }
-): Promise<ICategoryData[] | null> {
+  queryString?: { [key: string]: string },
+) {
   const url = new URL(`${API_URL}/category/search/${name}`);
 
   if (queryString)
@@ -27,5 +26,5 @@ export async function searchCategory(
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

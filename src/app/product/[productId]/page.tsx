@@ -11,6 +11,7 @@ import {
 import VariantSelector from "./VariantSelector";
 import ComposedProductDetails from "./ComposedProductDetails";
 import Image from "next/image";
+import ErrorCard from "@/components/ErrorCard";
 
 const ProductWithVariantDetails = ({
   product,
@@ -80,14 +81,29 @@ export default async function Product({ params }) {
     return null;
   }
 
+  if (
+    product.productType === "master" &&
+    (product.variants == null || product.variants.length === 0)
+  ) {
+    return (
+      <div className="pt-28 p-8">
+        <ErrorCard
+          error=" Invalid product, each master
+          product needs at least one variant."
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 h-full w-full pt-28">
-      <div className="grid grid-cols-2">
-        <div className="bg-gray-500 w-72 h-72 relative rounded overflow-clip">
+      <div className="grid grid-cols-2 gap-6">
+        <div className="bg-gray-500 w-full h-auto relative rounded overflow-clip">
           <Image
             fill={true}
             src={`${product.image ? product.image : "https://picsum.photos/200"}`}
             alt={product.label}
+            objectFit="contain"
             loading="lazy"
           />
         </div>

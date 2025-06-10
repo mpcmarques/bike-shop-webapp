@@ -7,7 +7,7 @@ import { API_URL } from "../lib/constants";
 export async function updateProduct(data: IProduct) {
   const session = await auth();
 
-  if (!session) return;
+  if (!session) return { error: "Not authorized" };
 
   const response = await fetch(`${API_URL}/product`, {
     method: "PUT",
@@ -24,5 +24,5 @@ export async function updateProduct(data: IProduct) {
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

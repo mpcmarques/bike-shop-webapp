@@ -24,5 +24,5 @@ export async function createProduct(data: IProduct) {
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

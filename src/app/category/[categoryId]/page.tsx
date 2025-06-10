@@ -2,6 +2,7 @@ import { getCategoryProducts } from "@/app/actions/getCategoryProducts";
 import Price from "@/components/price";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 export default async function CategoryPage({ params }) {
   const { categoryId } = await params;
@@ -16,7 +17,13 @@ export default async function CategoryPage({ params }) {
     return null;
   }
 
+  if (data.error) return null;
+
   const { category, products } = data;
+
+  if (products.length === 1) {
+    return redirect(`/product/${products[0].name}`);
+  }
 
   return (
     <div className="w-full h-full p-6 gap-4 flex flex-col pt-28">

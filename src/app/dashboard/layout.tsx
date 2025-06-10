@@ -6,7 +6,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="grid grid-cols-6 h-full w-full p-6 gap-4 pt-22">
+    <div className="grid grid-cols-6 h-full w-full p-8 gap-4 pt-22">
       <ul className="flex flex-col gap-2 bg-zinc-800 px-6 py-5 rounded col-span-1 border border-zinc-700">
         <Link href="/dashboard/categories">Categories</Link>
         <Link href="/dashboard/products">Products</Link>

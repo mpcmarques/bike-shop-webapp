@@ -1,11 +1,10 @@
 "use server";
 
-import { IProductData } from "@/types";
 import { API_URL } from "../lib/constants";
 
 export async function getProducts(queryString?: {
   [key: string]: string | undefined | number;
-}): Promise<IProductData[] | null> {
+}) {
   const url = new URL(`${API_URL}/product`);
 
   if (queryString)
@@ -26,5 +25,5 @@ export async function getProducts(queryString?: {
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

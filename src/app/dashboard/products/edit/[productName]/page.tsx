@@ -1,5 +1,5 @@
 import { getCategories } from "@/app/actions/getCategories";
-import NewProductForm from "../../components/EditProductForm";
+import EditProductForm from "../../components/EditProductForm";
 import { getProduct } from "@/app/actions/getProduct";
 import { IProductData } from "@/types";
 
@@ -14,7 +14,7 @@ export default async function EditProduct({ params }) {
     <div className="flex flex-col h-full w-full">
       <h2>Edit Product</h2>
 
-      <NewProductForm
+      <EditProductForm
         categories={categories}
         product={product as IProductData}
       />

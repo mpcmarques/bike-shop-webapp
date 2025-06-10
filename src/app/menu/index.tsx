@@ -1,12 +1,12 @@
 "use server";
 
 import Link from "next/link";
-import { getCategories } from "../actions/getCategories";
 import Profile from "./profile";
 import { BiSolidHome } from "react-icons/bi";
+import { getMenuCategories } from "../actions/getMenuCategories";
 
 export default async function Menu() {
-  const categories = await getCategories();
+  const categories = await getMenuCategories();
 
   return (
     <div className="w-full px-8 pt-4 z-10">

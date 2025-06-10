@@ -1,3 +1,5 @@
+import { redirect } from "next/navigation";
+
 export default async function Dashboard() {
-  return <div className="flex h-full w-full"></div>;
+  return redirect("/dashboard/categories");
 }

@@ -1,11 +1,8 @@
 "use server";
 
-import { IProductDataWithVariants } from "@/types";
 import { API_URL } from "../lib/constants";
 
-export async function getProduct(
-  name: string
-): Promise<IProductDataWithVariants | null> {
+export async function getProduct(name: string) {
   const response = await fetch(`${API_URL}/product/${name}`, {
     method: "GET",
     headers: {
@@ -19,5 +16,5 @@ export async function getProduct(
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

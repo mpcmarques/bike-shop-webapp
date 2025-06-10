@@ -8,18 +8,26 @@ import { signUp } from "../actions/signUp";
 import { signUpFormData, signUpSchema } from "../lib/validation/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInputField from "@/components/FormInput";
+import ErrorCard from "@/components/ErrorCard";
 
 const SignUp = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<signUpFormData>({
     resolver: zodResolver(signUpSchema),
   });
 
   const onSubmit: SubmitHandler<signUpFormData> = async (data) => {
-    await signUp(data);
+    const result = await signUp(data);
+
+    if (result.error) {
+      return setError("root", {
+        message: result.error,
+      });
+    }
 
     await signIn("credentials", {
       email: data.email,
@@ -142,6 +150,8 @@ const SignUp = () => {
               ...register("confirmPassword"),
             }}
           />
+
+          {errors.root ? <ErrorCard error={errors.root.message} /> : null}
 
           <button type="submit" className="btn-default" disabled={isSubmitting}>
             {!isSubmitting ? (

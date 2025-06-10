@@ -24,5 +24,5 @@ export async function removeFromCart(data: IProductData) {
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

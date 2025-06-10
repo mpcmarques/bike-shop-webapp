@@ -1,12 +1,11 @@
 "use server";
 
-import { ICategoryData, IProductData } from "@/types";
 import { API_URL } from "../lib/constants";
 
 export async function getCategoryProducts(
   name: string,
   queryString?: { [key: string]: string | string[] },
-): Promise<{ category: ICategoryData; products: IProductData[] } | null> {
+) {
   const url = new URL(`${API_URL}/category/${name}/products`);
 
   if (queryString)
@@ -31,5 +30,5 @@ export async function getCategoryProducts(
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

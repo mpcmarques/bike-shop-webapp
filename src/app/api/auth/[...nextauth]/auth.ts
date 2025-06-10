@@ -24,7 +24,11 @@ const authOptions: NextAuthConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const data = signInSchema.parse(credentials);
+        const { data, error } = signInSchema.safeParse(credentials);
+
+        if (error) {
+          return { error: "Invalid fields" };
+        }
 
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
@@ -32,22 +36,26 @@ const authOptions: NextAuthConfig = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        const res = await fetch(`${API_URL}/auth/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        });
+        try {
+          const res = await fetch(`${API_URL}/auth/login`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          });
 
-        const { access_token } = await res.json();
+          const { access_token } = await res.json();
 
-        // If no error and we have user data, return it
-        if (res.ok && access_token) {
-          return { access_token, email: data.email };
+          // If no error and we have user data, return it
+          if (res.ok && access_token) {
+            return { access_token, email: data.email };
+          } else {
+            return { error: "Wrong username or password" };
+          }
+        } catch (_) {
+          return { error: "Error logging in" };
         }
-        // Return null if user data could not be retrieved
-        return null;
       },
     }),
     // ...add more providers here
@@ -61,6 +69,10 @@ const authOptions: NextAuthConfig = {
       return token;
     },
     async session({ session, token }) {
+      if (!token.accessToken) {
+        throw new Error("invalid credentials");
+      }
+
       const request = await fetch(`${API_URL}/auth/profile`, {
         method: "GET",
         headers: {

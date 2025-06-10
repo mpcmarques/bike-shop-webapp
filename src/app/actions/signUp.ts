@@ -1,12 +1,9 @@
 "use server";
 
-import { IProductData } from "@/types";
 import { API_URL } from "../lib/constants";
 import { signUpFormData, signUpSchema } from "../lib/validation/signUpSchema";
 
-export async function signUp(
-  data: signUpFormData,
-): Promise<IProductData[] | null> {
+export async function signUp(data: signUpFormData) {
   const validData = signUpSchema.parse(data);
 
   const url = new URL(`${API_URL}/user`);
@@ -25,5 +22,5 @@ export async function signUp(
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

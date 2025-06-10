@@ -23,5 +23,5 @@ export async function getCartItems() {
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

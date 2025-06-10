@@ -2,6 +2,7 @@ export interface ICategory {
   name: string;
   description: string;
   label: string;
+  showInMenu: boolean;
 }
 
 export interface ICategoryData extends ICategory {

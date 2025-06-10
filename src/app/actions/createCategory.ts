@@ -1,10 +1,15 @@
 "use server";
 
 import { auth } from "../api/auth/[...nextauth]/auth";
-import { ICategory } from "@/types";
 import { API_URL } from "../lib/constants";
+import {
+  createCategoryFormData,
+  createCategorySchema,
+} from "../lib/validation/createCategorySchema";
 
-export async function createCategory(data: ICategory) {
+export async function createCategory(data: createCategoryFormData) {
+  const validData = createCategorySchema.parse(data);
+
   const session = await auth();
 
   if (!session) return;
@@ -15,7 +20,7 @@ export async function createCategory(data: ICategory) {
       "Content-Type": "application/json",
       Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(validData),
   });
 
   if (response.ok) {
@@ -24,5 +29,5 @@ export async function createCategory(data: ICategory) {
     return data;
   }
 
-  return null;
+  return { error: response.statusText };
 }

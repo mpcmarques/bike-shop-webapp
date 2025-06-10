@@ -14,8 +14,18 @@ type Props = {
 const FormInputField = ({ label, error, inputProps }: Props) => {
   return (
     <div className="flex flex-col gap-2">
-      <label className="flex gap-2 items-center">{label}</label>
-      <input {...inputProps} className="input-default" />
+      {inputProps.type === "checkbox" ? (
+        <div className="flex gap-8">
+          <label className="flex gap-2 items-center">{label}</label>
+          <input {...inputProps} className="input-default" />
+        </div>
+      ) : (
+        <>
+          <label className="flex gap-2 items-center">{label}</label>
+          <input {...inputProps} className="input-default" />
+        </>
+      )}
+
       <div className="text-red-500">{error ? error : null}</div>
     </div>
   );
