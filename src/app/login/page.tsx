@@ -5,6 +5,9 @@ import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiDoorOpen, BiKey, BiMailSend } from "react-icons/bi";
 import { redirect } from "next/navigation";
+import { signInFormData, signInSchema } from "../lib/validation/signInSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormInputField from "@/components/FormInput";
 
 const Login = () => {
   const {
@@ -12,7 +15,7 @@ const Login = () => {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<{ email: string; password: string }>({});
+  } = useForm<signInFormData>({ resolver: zodResolver(signInSchema) });
 
   const onSubmit: SubmitHandler<{ email: string; password: string }> = async (
     data,
@@ -33,23 +36,32 @@ const Login = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 mb-4"
         >
-          <label className="flex gap-2 items-center">
-            <BiMailSend /> E-Mail
-          </label>
-          <input
-            type="email"
-            {...register("email")}
-            className="input-default"
+          <FormInputField
+            label={
+              <>
+                <BiMailSend /> E-Mail
+              </>
+            }
+            error={errors.email?.message}
+            inputProps={{
+              type: "email",
+              ...register("email"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">
-            <BiKey /> Password
-          </label>
-          <input
-            type="password"
-            {...register("password")}
-            className="input-default"
+          <FormInputField
+            label={
+              <>
+                <BiKey /> Password
+              </>
+            }
+            error={errors.password?.message}
+            inputProps={{
+              type: "password",
+              ...register("password"),
+            }}
           />
+
           <button type="submit" className="btn-default" disabled={isSubmitting}>
             {!isSubmitting ? (
               <>

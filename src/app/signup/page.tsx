@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
@@ -12,19 +11,9 @@ import {
 } from "react-icons/bi";
 import { redirect } from "next/navigation";
 import { signUp } from "../actions/signUp";
-
-interface SignUpFormFields {
-  email: string;
-  password: string;
-  repeatPassword: string;
-  firstName: string;
-  lastName: string;
-  address: string;
-  floor: string;
-  door: string;
-  postalCode: string;
-  city: string;
-}
+import { signUpFormData, signUpSchema } from "../lib/validation/signUpSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormInputField from "@/components/FormInput";
 
 const SignUp = () => {
   const {
@@ -32,9 +21,11 @@ const SignUp = () => {
     handleSubmit,
     watch,
     formState: { errors, isSubmitting },
-  } = useForm<SignUpFormFields>({});
+  } = useForm<signUpFormData>({
+    resolver: zodResolver(signUpSchema),
+  });
 
-  const onSubmit: SubmitHandler<SignUpFormFields> = async (data) => {
+  const onSubmit: SubmitHandler<signUpFormData> = async (data) => {
     await signUp(data);
 
     await signIn("credentials", {
@@ -53,70 +44,110 @@ const SignUp = () => {
           onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-4 mb-4"
         >
-          <label className="flex gap-2 items-center">First Name</label>
-          <input
-            type="text"
-            {...register("firstName")}
-            className="input-default"
+          <FormInputField
+            label={<>First Name</>}
+            error={errors.firstName?.message}
+            inputProps={{
+              type: "text",
+              ...register("firstName"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">Last Name</label>
-          <input
-            type="text"
-            {...register("lastName")}
-            className="input-default"
+          <FormInputField
+            label={<>Last Name</>}
+            error={errors.lastName?.message}
+            inputProps={{
+              type: "text",
+              ...register("lastName"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">
-            <BiBuilding /> Address
-          </label>
-          <input
-            type="text"
-            {...register("address")}
-            className="input-default"
+          <FormInputField
+            label={
+              <>
+                <BiBuilding /> Address
+              </>
+            }
+            error={errors.address?.message}
+            inputProps={{
+              type: "text",
+              ...register("address"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">Floor</label>
-          <input type="text" {...register("floor")} className="input-default" />
-
-          <label className="flex gap-2 items-center">Door</label>
-          <input type="text" {...register("door")} className="input-default" />
-
-          <label className="flex gap-2 items-center">Postal Code</label>
-          <input
-            type="text"
-            {...register("postalCode")}
-            className="input-default"
+          <FormInputField
+            label={<>Floor</>}
+            error={errors.floor?.message}
+            inputProps={{
+              type: "text",
+              ...register("floor"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">City</label>
-          <input type="text" {...register("city")} className="input-default" />
-
-          <label className="flex gap-2 items-center">
-            <BiMailSend /> E-Mail
-          </label>
-          <input
-            type="email"
-            {...register("email")}
-            className="input-default"
+          <FormInputField
+            label={<>Door</>}
+            error={errors.door?.message}
+            inputProps={{
+              type: "text",
+              ...register("door"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">
-            <BiKey /> Password
-          </label>
-          <input
-            type="password"
-            {...register("password")}
-            className="input-default"
+          <FormInputField
+            label={<>Postal Code</>}
+            error={errors.postalCode?.message}
+            inputProps={{
+              type: "text",
+              ...register("postalCode"),
+            }}
           />
 
-          <label className="flex gap-2 items-center">
-            <BiKey /> Repeat password
-          </label>
-          <input
-            type="password"
-            {...register("repeatPassword")}
-            className="input-default"
+          <FormInputField
+            label={<>City</>}
+            error={errors.city?.message}
+            inputProps={{
+              type: "text",
+              ...register("city"),
+            }}
+          />
+
+          <FormInputField
+            label={
+              <>
+                <BiMailSend /> E-Mail
+              </>
+            }
+            error={errors.email?.message}
+            inputProps={{
+              type: "email",
+              ...register("email"),
+            }}
+          />
+
+          <FormInputField
+            label={
+              <>
+                <BiKey /> Password
+              </>
+            }
+            error={errors.password?.message}
+            inputProps={{
+              type: "password",
+              ...register("password"),
+            }}
+          />
+
+          <FormInputField
+            label={
+              <>
+                <BiKey /> Confirm password
+              </>
+            }
+            error={errors.confirmPassword?.message}
+            inputProps={{
+              type: "password",
+              ...register("confirmPassword"),
+            }}
           />
 
           <button type="submit" className="btn-default" disabled={isSubmitting}>

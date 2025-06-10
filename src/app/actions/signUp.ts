@@ -2,18 +2,13 @@
 
 import { IProductData } from "@/types";
 import { API_URL } from "../lib/constants";
+import { signUpFormData, signUpSchema } from "../lib/validation/signUpSchema";
 
-export async function signUp(data: {
-  email: string;
-  password: string;
-  postalCode: string;
-  address: string;
-  firstName: string;
-  lastName: string;
-  floor: string;
-  door: string;
-  city: string;
-}): Promise<IProductData[] | null> {
+export async function signUp(
+  data: signUpFormData,
+): Promise<IProductData[] | null> {
+  const validData = signUpSchema.parse(data);
+
   const url = new URL(`${API_URL}/user`);
 
   const response = await fetch(url, {
@@ -21,7 +16,7 @@ export async function signUp(data: {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(validData),
   });
 
   if (response.ok) {

@@ -2,6 +2,7 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { API_URL } from "@/app/lib/constants";
 import { redirect } from "next/navigation";
+import { signInSchema } from "@/app/lib/validation/signInSchema";
 
 const authOptions: NextAuthConfig = {
   // Configure one or more authentication providers
@@ -23,6 +24,8 @@ const authOptions: NextAuthConfig = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        const data = signInSchema.parse(credentials);
+
         // You need to provide your own logic here that takes the credentials
         // submitted and returns either a object representing a user or value
         // that is false/null if the credentials are invalid.
@@ -34,17 +37,14 @@ const authOptions: NextAuthConfig = {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            email: credentials?.email,
-            password: credentials?.password,
-          }),
+          body: JSON.stringify(data),
         });
 
         const { access_token } = await res.json();
 
         // If no error and we have user data, return it
         if (res.ok && access_token) {
-          return { access_token, email: credentials?.email };
+          return { access_token, email: data.email };
         }
         // Return null if user data could not be retrieved
         return null;
