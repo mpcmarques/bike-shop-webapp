@@ -81,7 +81,7 @@ export default async function Product({ params }) {
   }
 
   return (
-    <div className="p-8 h-full w-full">
+    <div className="p-8 h-full w-full pt-28">
       <div className="grid grid-cols-2">
         <div className="bg-gray-500 w-72 h-72 relative rounded overflow-clip">
           <Image

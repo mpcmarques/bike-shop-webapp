@@ -2,13 +2,7 @@
 
 import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  BiBuilding,
-  BiDoorOpen,
-  BiKey,
-  BiMailSend,
-  BiUserPlus,
-} from "react-icons/bi";
+import { BiBuilding, BiKey, BiMailSend, BiUserPlus } from "react-icons/bi";
 import { redirect } from "next/navigation";
 import { signUp } from "../actions/signUp";
 import { signUpFormData, signUpSchema } from "../lib/validation/signUpSchema";
@@ -19,7 +13,6 @@ const SignUp = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<signUpFormData>({
     resolver: zodResolver(signUpSchema),
@@ -38,7 +31,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="w-full flex justify-center items-center h-full">
+    <div className="w-full flex justify-center items-center h-full pt-22">
       <div className="w-2xl max-w-3xl p-8 gap-4 border border-zinc-700 bg-zinc-800 rounded">
         <form
           onSubmit={handleSubmit(onSubmit)}

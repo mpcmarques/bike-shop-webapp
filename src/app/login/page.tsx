@@ -13,7 +13,6 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors, isSubmitting },
   } = useForm<signInFormData>({ resolver: zodResolver(signInSchema) });
 
@@ -30,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <div className="w-full flex justify-center items-center pt-48">
+    <div className="w-full flex justify-center items-center pt-32">
       <div className="w-2xl max-w-3xl p-8 gap-4 border border-zinc-700 bg-zinc-800 rounded">
         <form
           onSubmit={handleSubmit(onSubmit)}

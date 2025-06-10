@@ -19,7 +19,7 @@ export default async function CategoryPage({ params }) {
   const { category, products } = data;
 
   return (
-    <div className="w-full h-full p-6 gap-4 flex flex-col">
+    <div className="w-full h-full p-6 gap-4 flex flex-col pt-28">
       <h1 className="text-2xl">{category.label}</h1>
       <h2 className="text-lg">{category.description}</h2>
 

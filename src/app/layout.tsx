@@ -30,10 +30,10 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased w-full h-full`}
       >
         <NextAuthProvider>
-          <div className="h-full w-full flex flex-col gap-4">
+          <div className="h-full w-full flex flex-col gap-4 relative">
             <Menu />
 
-            <div className="h-full w-full">{children}</div>
+            <div className="h-full w-full absolute t-0 l-0">{children}</div>
           </div>
         </NextAuthProvider>
       </body>
