@@ -1,10 +1,15 @@
 "use server";
 
+import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
 export async function getProducts(queryString?: {
   [key: string]: string | undefined | number;
 }) {
+  const session = await auth();
+
+  if (!session) return { error: "Not Authorized" };
+
   const url = new URL(`${API_URL}/product`);
 
   if (queryString)
@@ -16,6 +21,7 @@ export async function getProducts(queryString?: {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${session.accessToken}`,
     },
   });
 

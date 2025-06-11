@@ -8,24 +8,32 @@ import { redirect } from "next/navigation";
 import { signInFormData, signInSchema } from "../lib/validation/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInputField from "@/components/FormInput";
+import ErrorCard from "@/components/ErrorCard";
 
 const Login = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<signInFormData>({ resolver: zodResolver(signInSchema) });
 
   const onSubmit: SubmitHandler<{ email: string; password: string }> = async (
     data,
   ) => {
-    await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      redirect: false,
-    });
+    try {
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false,
+      });
 
-    redirect("/");
+      redirect("/");
+    } catch (error: any) {
+      setError("root", {
+        message: error?.message || "An error occurred during sign in.",
+      });
+    }
   };
 
   return (
@@ -71,6 +79,8 @@ const Login = () => {
             )}
           </button>
         </form>
+
+        {errors.root && <ErrorCard error={errors?.root?.message} />}
 
         <Link
           href="/signup"

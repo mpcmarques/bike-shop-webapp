@@ -11,8 +11,11 @@ import {
 import { SubmitHandler, useForm } from "react-hook-form";
 import VariationAttributeSelector from "./VariationAttributeSelector";
 import ComposedCombinationsSelector from "./ComposedCombinationsSelector";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { updateProduct } from "@/app/actions/updateProduct";
+import { redirect } from "next/navigation";
+import { deleteProduct } from "@/app/actions/deleteProduct";
+import ErrorCard from "@/components/ErrorCard";
 
 interface IEditProductFormProps {
   product?: IProductData;
@@ -23,11 +26,14 @@ const EditProductForm: React.FC<IEditProductFormProps> = ({
   product,
   categories,
 }) => {
+  const [isDeleting, startDeleting] = useTransition();
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<IProduct>({
     defaultValues: product,
@@ -35,16 +41,45 @@ const EditProductForm: React.FC<IEditProductFormProps> = ({
 
   const onSubmit: SubmitHandler<IProduct> = useCallback(
     async (data) => {
-      console.log("Submitting form", data);
-
       if (product) {
-        await updateProduct(data);
+        const { error } = updateProduct(data);
+
+        if (error) {
+          setError("root", {
+            message: error,
+          });
+        }
         return;
       }
 
-      await createProduct(data);
+      const { error } = await createProduct(data);
+
+      if (error) {
+        setError("root", {
+          message: error,
+        });
+      }
     },
-    [product]
+    [product, setError],
+  );
+
+  const handleDelete = useCallback(
+    async (product: IProductData) => {
+      if (!product) return;
+
+      startDeleting(async () => {
+        const { error } = await deleteProduct(product);
+
+        if (error) {
+          setError("root", {
+            message: error,
+          });
+        } else {
+          redirect("/dashboard/products");
+        }
+      });
+    },
+    [setError],
   );
 
   const productType = watch("productType");
@@ -53,7 +88,7 @@ const EditProductForm: React.FC<IEditProductFormProps> = ({
   const composedCombinations = watch("composed");
 
   return (
-    <div className=" w-full p-8">
+    <div className="flex flex-col gap-4 w-full p-8">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-8">
         <label className="font-bold">Name</label>
         <input
@@ -154,6 +189,8 @@ const EditProductForm: React.FC<IEditProductFormProps> = ({
           className="border border-zinc-700 rounded text-white px-2 py-1"
         />
 
+        {errors.root ? <ErrorCard error={errors.root.message} /> : null}
+
         <button
           type="submit"
           className="bg-blue-600 rounded-xl px-4 py-2 hover:bg-blue-500 hover:cursor-pointer disabled:bg-blue-900 disabled:pointer-events-none"
@@ -162,6 +199,16 @@ const EditProductForm: React.FC<IEditProductFormProps> = ({
           {isSubmitting ? "Submitting..." : product ? "Update" : "Create"}
         </button>
       </form>
+
+      {product ? (
+        <button
+          className="bg-red-700 rounded-xl px-4 py-2 hover:bg-red-500 hover:cursor-pointer disabled:bg-red-900 disabled:pointer-events-none"
+          disabled={isSubmitting || isDeleting}
+          onClick={() => handleDelete(product)}
+        >
+          {isDeleting ? "Deleting..." : "Delete"}
+        </button>
+      ) : null}
     </div>
   );
 };

@@ -9,7 +9,7 @@ export async function addToCart(
   data: IProductData,
   quantity: number,
   combination?: IProductData[],
-) {
+): Promise<IProductData | null> {
   const session = await auth();
 
   if (!session) return redirect("/login");

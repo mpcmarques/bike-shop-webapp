@@ -3,19 +3,17 @@
 import ProductSearch from "@/components/productSearch";
 import { IProductData } from "@/types";
 import Link from "next/link";
-import { useState } from "react";
-import { BiCheck, BiEdit } from "react-icons/bi";
+import { redirect } from "next/navigation";
+import { BiEdit } from "react-icons/bi";
 
 interface IProductsTableProps {
   products: IProductData[];
 }
 
 const ProductsTable: React.FC<IProductsTableProps> = ({ products }) => {
-  const [productsData, setProductsData] = useState(products);
-
-  const onChange = () => {};
-
-  console.log(productsData);
+  const onChange = (product: IProductData) => {
+    return redirect(`/dashboard/products/edit/${product.name}`);
+  };
 
   return (
     <div className="flex flex-col gap-4">
@@ -36,7 +34,7 @@ const ProductsTable: React.FC<IProductsTableProps> = ({ products }) => {
         </thead>
 
         <tbody>
-          {productsData.map((product) => (
+          {products.map((product) => (
             <tr key={product._id} className="border-b border-b-zinc-700">
               <td className="px-4 py-2 bg-slate-800 border-l border-l-zinc-700 border-r border-r-zinc-700">
                 {product.name}

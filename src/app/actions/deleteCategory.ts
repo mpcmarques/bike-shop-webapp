@@ -1,24 +1,24 @@
 "use server";
 
-import { IProduct } from "@/types";
+import { ICategoryData } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
-export async function createProduct(data: IProduct) {
+export async function deleteCategory(data: ICategoryData) {
   const session = await auth();
 
-  if (!session) return { error: "Not authorized" };
+  if (!session) return { error: "Not Authorized" };
 
-  const response = await fetch(`${API_URL}/product`, {
-    method: "POST",
+  const response = await fetch(`${API_URL}/category`, {
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      id: data._id,
+    }),
   });
-
-  console.log("createProduct response", response);
 
   if (response.ok) {
     const data = await response.json();

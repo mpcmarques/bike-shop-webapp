@@ -2,9 +2,14 @@ import Link from "next/link";
 import { getCategories } from "@/app/actions/getCategories";
 import CategoriesTable from "./components/CategoriesTable";
 import { BiPlus } from "react-icons/bi";
+import ErrorCard from "@/components/ErrorCard";
 
 export default async function Categories() {
   const categories = await getCategories();
+
+  if (categories.error) {
+    return <ErrorCard error={categories.error} />;
+  }
 
   return (
     <div className="flex flex-col h-full w-full gap-4">

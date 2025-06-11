@@ -4,9 +4,14 @@ import Link from "next/link";
 import Profile from "./profile";
 import { BiSolidHome } from "react-icons/bi";
 import { getMenuCategories } from "../actions/getMenuCategories";
+import ErrorCard from "@/components/ErrorCard";
 
 export default async function Menu() {
   const categories = await getMenuCategories();
+
+  if (categories.error) {
+    return <ErrorCard error={categories.error} />;
+  }
 
   return (
     <div className="w-full px-8 pt-4 z-10">

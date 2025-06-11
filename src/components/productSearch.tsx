@@ -2,7 +2,7 @@
 
 import { searchProducts } from "@/app/actions/searchProducts";
 import { ICategoryData, IProductData } from "@/types";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { BiSearch } from "react-icons/bi";
 import { useDebouncedCallback } from "use-debounce";
 
@@ -33,10 +33,6 @@ const ProductSearch = ({
     }
   }, 500);
 
-  const handleBlur = useCallback(() => {
-    // setValues([]);
-  }, []);
-
   return (
     <div className="w-full">
       <div className="border border-zinc-700 rounded text-white px-2 py-1 w-full flex gap-4 items-center">
@@ -50,7 +46,6 @@ const ProductSearch = ({
           }}
           value={text}
           className="bg-transparent border-transparent outline-none w-full"
-          onBlur={handleBlur}
         />
       </div>
 

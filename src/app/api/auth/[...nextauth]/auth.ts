@@ -36,26 +36,23 @@ const authOptions: NextAuthConfig = {
         // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
         // You can also use the `req` object to obtain additional parameters
         // (i.e., the request IP address)
-        try {
-          const res = await fetch(`${API_URL}/auth/login`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          });
 
-          const { access_token } = await res.json();
+        const res = await fetch(`${API_URL}/auth/login`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
 
-          // If no error and we have user data, return it
-          if (res.ok && access_token) {
-            return { access_token, email: data.email };
-          } else {
-            return { error: "Wrong username or password" };
-          }
-        } catch (_) {
-          return { error: "Error logging in" };
+        const user = await res.json();
+
+        // If no error and we have user data, return it
+        if (res.ok && data) {
+          return user;
         }
+
+        return null;
       },
     }),
     // ...add more providers here
@@ -64,7 +61,7 @@ const authOptions: NextAuthConfig = {
     async jwt({ token, user }) {
       // Persist the OAuth access_token to the token right after signin
       if (user) {
-        token.accessToken = user.access_token;
+        token.accessToken = user?.access_token;
       }
       return token;
     },

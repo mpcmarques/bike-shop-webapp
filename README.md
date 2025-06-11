@@ -1,21 +1,81 @@
-You're tasked with building a website that allows Marcus, a bicycle shop owner, to sell his bicycles. Marcus owns a growing business and now wants to sell online. He also tells you that bicycles are his main product, but if the business continues to grow, he will surely start selling other sports-related items such as skis, surfboards, roller skates, etc. It would be a nice bonus if the same website allowed him to sell those things as well.What makes Marcus's business successful is that customers can fully customize their bicycles. They can select many different options for the various parts of the bicycle.
-Here is an incomplete list of all the parts and their possible choices, to give an example:
+# Bike Shop Web App – Solution Summary
 
-Frame type: Full-suspension, diamond, step-through
-Frame finish: Matte, shiny
-Wheels: Road wheels, mountain wheels, fat bike wheels
-Rim color: Red, black, blue
-Chain: Single-speed chain, 8-speed chain
-On top of that, Marcus points out that some combinations are prohibited because they are not possible in reality. For example:
+## Overview
 
-If you select "mountain wheels," then the only frame available is the full-suspension.
-If you select "fat bike wheels," then the red rim color is unavailable because the manufacturer doesn't provide it.
-Additionally, Marcus sometimes doesn't have all possible variations of each part in stock, so he wants to be able to mark them as "temporarily out of stock" to avoid receiving orders he can't fulfill.Finally, Marcus explains how to calculate the price that you should present to the customer after customizing a bicycle. Normally, this price is calculated by adding up the individual prices of each selected part. For example:
+This project is a full-stack web application for a customizable bicycle shop, allowing users to browse, customize, and purchase bikes and related products. The app supports user authentication, admin dashboards, product/category management, and a dynamic cart system.
 
-Full suspension = 130 EUR
-Shiny frame = 30 EUR
-Road wheels = 80 EUR
-Rim color blue = 20 EUR
-Chain: Single-speed chain = 43 EUR
-Total price: 130 + 30 + 80 + 20 + 43 = 303 EUR
-However, the price of some options might depend on others. For instance, the frame finish is applied over the whole bicycle, so the more area to cover, the more expensive it gets. Because of that, the matte finish over a full-suspension frame costs 50 EUR, while applied over a diamond frame it costs 35 EUR. These kinds of variations can always happen, and they might depend on any of the other choices, so Marcus asks you to consider this, as otherwise, he would be losing money.
+---
+
+## Technologies Utilized
+
+- **Next.js (App Router):** Main framework for SSR/SSG and routing.
+- **React 19:** UI components and client-side interactivity.
+- **TypeScript:** Type safety across the codebase.
+- **Tailwind CSS:** Utility-first CSS for styling (`src/app/globals.css`).
+- **NextAuth.js v5:** Authentication and session management (`src/app/api/auth/[...nextauth]/auth.ts`).
+- **React Hook Form:** Form state management and validation.
+- **Zod:** Schema validation for forms and API requests (`src/app/lib/validation/`).
+- **React Icons:** Iconography.
+- **use-debounce:** Debounced input handling for search.
+
+---
+
+## Authentication & Authorization
+
+- **Authentication:**  
+  - Handled via NextAuth.js with a custom credentials provider.
+  - On login, credentials are validated and exchanged for a JWT (`access_token`) from the backend API.
+  - The JWT is stored in the session and used for authenticated API requests.
+  - Session data is enriched with user profile info fetched from the backend (`src/app/api/auth/[...nextauth]/auth.ts`).
+
+- **Authorization Guards:**  
+  - Middleware (`src/middleware.ts`) restricts access to `/dashboard` routes to admin users only, using `withAdmin`.
+  - `withUser` can be used for user-level protection.
+  - Guards check the session and user roles, redirecting unauthorized users to `/login` or `/`.
+
+---
+
+## Request & Schema Validation
+
+- **Form Validation:**  
+  - All forms use React Hook Form with Zod schemas for validation (e.g., `signUpSchema`, `signInSchema`, `createCategorySchema`).
+  - Validation errors are displayed inline using components like `ErrorCard`.
+
+- **API Request Validation:**  
+  - Before sending data to the backend, forms are validated against Zod schemas.
+  - Server actions (e.g., `createCategory`, `signUp`) parse and validate input before making API calls.
+
+---
+
+## Features & Structure
+
+- **Product & Category Management:**  
+  - Admin dashboard for CRUD operations on products and categories.
+  - Product types: master, variant, composed (with dynamic combinations and stock management).
+  - Category and product search with debounced input.
+
+- **Cart & Checkout:**  
+  - Authenticated users can add/remove products to/from their cart.
+  - Cart state is synced with the backend and session.
+  - Price calculation supports composed products and dynamic combinations (`calculateCartProductPrice`).
+
+- **UI/UX:**  
+  - Responsive, modern UI with Tailwind CSS.
+  - Components for forms, tables, search, and product customization.
+
+---
+
+## Security
+
+- **Session Management:**  
+  - JWT tokens are stored in secure, HTTP-only cookies.
+  - All sensitive API requests include the bearer token for authorization.
+
+- **Input Validation:**  
+  - All user input is validated both client-side and server-side before processing.
+
+---
+
+## Extensibility
+
+- The system is designed to support new product types and categories, with flexible schema definitions and dynamic UI components.
