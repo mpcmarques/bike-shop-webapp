@@ -7,7 +7,9 @@ import {
   createCategorySchema,
 } from "../lib/validation/createCategorySchema";
 
-export async function updateCategory(data: createCategoryFormData) {
+export async function updateCategory(
+  data: createCategoryFormData,
+): Promise<{ error?: string }> {
   const validData = createCategorySchema.parse(data);
 
   const session = await auth();

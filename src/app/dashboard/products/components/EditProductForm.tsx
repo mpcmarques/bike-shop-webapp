@@ -42,11 +42,11 @@ const EditProductForm: React.FC<IEditProductFormProps> = ({
   const onSubmit: SubmitHandler<IProduct> = useCallback(
     async (data) => {
       if (product) {
-        const { error } = updateProduct(data);
+        const res = await updateProduct(data);
 
-        if (error) {
+        if (res.error) {
           setError("root", {
-            message: error,
+            message: res.error,
           });
         }
         return;

@@ -6,7 +6,7 @@ import { API_URL } from "../lib/constants";
 
 export async function deleteProduct(
   data: IProductData,
-): Promise<IProductData | { error: string }> {
+): Promise<{ error?: string }> {
   const session = await auth();
 
   if (!session) return { error: "Not authorized" };

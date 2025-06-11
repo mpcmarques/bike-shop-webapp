@@ -4,7 +4,9 @@ import { ICategoryData } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
-export async function deleteCategory(data: ICategoryData) {
+export async function deleteCategory(
+  data: ICategoryData,
+): Promise<{ error?: string }> {
   const session = await auth();
 
   if (!session) return { error: "Not Authorized" };

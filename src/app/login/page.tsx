@@ -29,7 +29,7 @@ const Login = () => {
       });
 
       redirect("/");
-    } catch (error: any) {
+    } catch (error) {
       setError("root", {
         message: error?.message || "An error occurred during sign in.",
       });

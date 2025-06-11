@@ -1,11 +1,12 @@
 "use server";
 
+import { IProduct } from "@/types";
 import { API_URL } from "../lib/constants";
 
 export async function getCategoryProducts(
   name: string,
   queryString?: { [key: string]: string | string[] },
-) {
+): Promise<IProduct[] | { error: string }> {
   const url = new URL(`${API_URL}/category/${name}/products`);
 
   if (queryString)

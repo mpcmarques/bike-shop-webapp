@@ -1,8 +1,11 @@
 "use server";
 
+import { IProductData } from "@/types";
 import { API_URL } from "../lib/constants";
 
-export async function getProduct(name: string) {
+export async function getProduct(
+  name: string,
+): Promise<IProductData | { error: string }> {
   const response = await fetch(`${API_URL}/product/${name}`, {
     method: "GET",
     headers: {

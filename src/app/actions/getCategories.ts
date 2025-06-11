@@ -2,8 +2,11 @@
 
 import { API_URL } from "../lib/constants";
 import { auth } from "../api/auth/[...nextauth]/auth";
+import { ICategoryData } from "@/types";
 
-export async function getCategories() {
+export async function getCategories(): Promise<
+  ICategoryData[] | { error: string }
+> {
   const session = await auth();
 
   if (!session) return { error: "Not Authorized" };

@@ -4,7 +4,9 @@ import { IProduct } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
-export async function updateProduct(data: IProduct) {
+export async function updateProduct(
+  data: IProduct,
+): Promise<{ error?: string }> {
   const session = await auth();
 
   if (!session) return { error: "Not authorized" };

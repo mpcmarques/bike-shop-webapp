@@ -7,12 +7,14 @@ import {
   createCategorySchema,
 } from "../lib/validation/createCategorySchema";
 
-export async function createCategory(data: createCategoryFormData) {
+export async function createCategory(
+  data: createCategoryFormData,
+): Promise<{ error?: string }> {
   const validData = createCategorySchema.parse(data);
 
   const session = await auth();
 
-  if (!session) return;
+  if (!session) return { error: "Not Authorized" };
 
   const response = await fetch(`${API_URL}/category`, {
     method: "POST",

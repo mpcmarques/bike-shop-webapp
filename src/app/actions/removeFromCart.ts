@@ -4,10 +4,12 @@ import { IProductData } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
-export async function removeFromCart(data: IProductData) {
+export async function removeFromCart(
+  data: IProductData,
+): Promise<{ error?: string }> {
   const session = await auth();
 
-  if (!session) return;
+  if (!session) return { error: "Not authorized" };
 
   const response = await fetch(`${API_URL}/user/cart`, {
     method: "DELETE",

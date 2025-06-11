@@ -1,11 +1,12 @@
 "use server";
 
+import { IProductData } from "@/types";
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
 export async function getProducts(queryString?: {
   [key: string]: string | undefined | number;
-}) {
+}): Promise<IProductData[] | { error: string }> {
   const session = await auth();
 
   if (!session) return { error: "Not Authorized" };

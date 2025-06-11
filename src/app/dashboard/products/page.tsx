@@ -7,7 +7,7 @@ import ErrorCard from "@/components/ErrorCard";
 export default async function Categories() {
   const products = await getProducts();
 
-  if (products.error) {
+  if (!Array.isArray(products) && products.error) {
     return <ErrorCard error={products.error} />;
   }
 
@@ -19,7 +19,7 @@ export default async function Categories() {
         </Link>
       </div>
 
-      <ProductsTable products={products || []} />
+      {Array.isArray(products) && <ProductsTable products={products || []} />}
     </div>
   );
 }
