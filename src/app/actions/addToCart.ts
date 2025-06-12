@@ -9,7 +9,7 @@ export async function addToCart(
   data: IProductData,
   quantity: number,
   combination?: IProductData[],
-): Promise<IProductData | null> {
+): Promise<{ data?: any; error?: string }> {
   const session = await auth();
 
   if (!session) return redirect("/login");
@@ -26,8 +26,8 @@ export async function addToCart(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
-  return null;
+  return { error: response.statusText };
 }

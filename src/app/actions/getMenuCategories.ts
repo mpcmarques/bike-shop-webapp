@@ -3,9 +3,10 @@
 import { ICategoryData } from "@/types";
 import { API_URL } from "../lib/constants";
 
-export async function getMenuCategories(): Promise<
-  ICategoryData[] | { error: string }
-> {
+export async function getMenuCategories(): Promise<{
+  data?: ICategoryData[];
+  error?: string;
+}> {
   const response = await fetch(`${API_URL}/category/menu`, {
     method: "GET",
     headers: {
@@ -16,7 +17,7 @@ export async function getMenuCategories(): Promise<
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

@@ -8,10 +8,10 @@ import ErrorCard from "@/components/ErrorCard";
 import { ICategoryData } from "@/types";
 
 export default async function Menu() {
-  const categories = await getMenuCategories();
+  const { error, data } = await getMenuCategories();
 
-  if (!Array.isArray(categories) && categories.error) {
-    return <ErrorCard error={categories.error} />;
+  if (error) {
+    return <ErrorCard error={error} />;
   }
 
   return (
@@ -24,7 +24,7 @@ export default async function Menu() {
           >
             <BiSolidHome className="text-2xl" />
           </Link>
-          {(categories as ICategoryData[]).map((category) => (
+          {(data as ICategoryData[]).map((category) => (
             <Link
               key={category._id}
               href={`/category/${category.name}`}

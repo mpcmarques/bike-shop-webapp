@@ -22,7 +22,7 @@ const ProductSearch = ({
     setText(text);
 
     if (text.length > 2) {
-      const data = await searchProducts(text, {
+      const { data } = await searchProducts(text, {
         productType: productType,
         category: category?._id,
       });

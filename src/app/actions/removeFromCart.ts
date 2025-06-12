@@ -6,7 +6,7 @@ import { API_URL } from "../lib/constants";
 
 export async function removeFromCart(
   data: IProductData,
-): Promise<{ error?: string }> {
+): Promise<{ data?: any; error?: string }> {
   const session = await auth();
 
   if (!session) return { error: "Not authorized" };
@@ -23,7 +23,7 @@ export async function removeFromCart(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

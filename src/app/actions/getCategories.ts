@@ -4,9 +4,10 @@ import { API_URL } from "../lib/constants";
 import { auth } from "../api/auth/[...nextauth]/auth";
 import { ICategoryData } from "@/types";
 
-export async function getCategories(): Promise<
-  ICategoryData[] | { error: string }
-> {
+export async function getCategories(): Promise<{
+  data?: ICategoryData[];
+  error?: string;
+}> {
   const session = await auth();
 
   if (!session) return { error: "Not Authorized" };
@@ -22,7 +23,7 @@ export async function getCategories(): Promise<
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

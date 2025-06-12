@@ -75,15 +75,15 @@ export default async function Product({ params }) {
 
   if (!productId) return null;
 
-  const product = await getProduct(productId);
+  const { data, error } = await getProduct(productId);
 
-  if (product == null) {
-    return null;
+  if (error || !data) {
+    return <ErrorCard error={error} />;
   }
 
   if (
-    product.productType === "master" &&
-    (product.variants == null || product.variants.length === 0)
+    data?.productType === "master" &&
+    (data.variants == null || data.variants.length === 0)
   ) {
     return (
       <div className="pt-28 p-8">
@@ -101,20 +101,20 @@ export default async function Product({ params }) {
         <div className="bg-gray-500 w-full h-auto relative rounded overflow-clip">
           <Image
             fill={true}
-            src={`${product.image ? product.image : "https://picsum.photos/200"}`}
-            alt={product.label}
+            src={`${data.image ? data.image : "https://picsum.photos/200"}`}
+            alt={data.label}
             objectFit="contain"
             loading="lazy"
           />
         </div>
         <div className="border-zinc-800 bg-zinc-900 border p-6 rounded flex flex-col">
           <div className="flex flex-col gap-2 mb-8">
-            <h1 className="text-2xl font-bold">{product.label}</h1>
-            <h2 className="text-xl">{product.description}</h2>
+            <h1 className="text-2xl font-bold">{data.label}</h1>
+            <h2 className="text-xl">{data.description}</h2>
           </div>
 
           <div className="w-full flex flex-col gap-4">
-            <ProductDetails product={product} />
+            <ProductDetails product={data as IProductDataWithVariants} />
           </div>
         </div>
       </div>

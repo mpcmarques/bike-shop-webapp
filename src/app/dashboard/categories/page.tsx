@@ -5,10 +5,10 @@ import { BiPlus } from "react-icons/bi";
 import ErrorCard from "@/components/ErrorCard";
 
 export default async function Categories() {
-  const categories = await getCategories();
+  const { error, data } = await getCategories();
 
-  if (categories.error) {
-    return <ErrorCard error={categories.error} />;
+  if (error) {
+    return <ErrorCard error={error} />;
   }
 
   return (
@@ -22,7 +22,7 @@ export default async function Categories() {
         </Link>
       </div>
 
-      <CategoriesTable categories={categories} />
+      <CategoriesTable categories={data || []} />
     </div>
   );
 }

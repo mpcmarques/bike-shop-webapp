@@ -5,7 +5,7 @@ import { API_URL } from "../lib/constants";
 
 export async function getProduct(
   name: string,
-): Promise<IProductData | { error: string }> {
+): Promise<{ data?: IProductData; error?: string }> {
   const response = await fetch(`${API_URL}/product/${name}`, {
     method: "GET",
     headers: {
@@ -16,7 +16,7 @@ export async function getProduct(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

@@ -1,5 +1,4 @@
 import { getCategoryProducts } from "@/app/actions/getCategoryProducts";
-import Price from "@/components/price";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -9,7 +8,7 @@ export default async function CategoryPage({ params }) {
 
   if (!categoryId) return null;
 
-  const data = await getCategoryProducts(categoryId, {
+  const { data, error } = await getCategoryProducts(categoryId, {
     productType: ["master", "composed"],
   });
 
@@ -17,7 +16,7 @@ export default async function CategoryPage({ params }) {
     return null;
   }
 
-  if (data.error) return null;
+  if (error) return null;
 
   const { category, products } = data;
 

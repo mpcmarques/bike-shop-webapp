@@ -1,11 +1,12 @@
 "use server";
 
+import { ICategoryData } from "@/types";
 import { API_URL } from "../lib/constants";
 
 export async function searchCategory(
   name: string,
   queryString?: { [key: string]: string },
-) {
+): Promise<{ data?: ICategoryData[]; error?: string }> {
   const url = new URL(`${API_URL}/category/search/${name}`);
 
   if (queryString)
@@ -23,7 +24,7 @@ export async function searchCategory(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

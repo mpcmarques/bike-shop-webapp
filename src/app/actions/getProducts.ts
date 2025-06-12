@@ -6,7 +6,7 @@ import { API_URL } from "../lib/constants";
 
 export async function getProducts(queryString?: {
   [key: string]: string | undefined | number;
-}): Promise<IProductData[] | { error: string }> {
+}): Promise<{ data?: IProductData[]; error?: string }> {
   const session = await auth();
 
   if (!session) return { error: "Not Authorized" };
@@ -29,7 +29,7 @@ export async function getProducts(queryString?: {
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

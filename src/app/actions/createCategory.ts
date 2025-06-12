@@ -9,7 +9,7 @@ import {
 
 export async function createCategory(
   data: createCategoryFormData,
-): Promise<{ error?: string }> {
+): Promise<{ data?: any; error?: string }> {
   const validData = createCategorySchema.parse(data);
 
   const session = await auth();
@@ -28,7 +28,7 @@ export async function createCategory(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

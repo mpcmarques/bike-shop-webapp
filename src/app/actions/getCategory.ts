@@ -5,7 +5,7 @@ import { API_URL } from "../lib/constants";
 
 export async function getCategory(
   name: string,
-): Promise<ICategoryData | { error: string }> {
+): Promise<{ data?: ICategoryData; error?: string }> {
   const response = await fetch(`${API_URL}/category/${name}`, {
     method: "GET",
     headers: {
@@ -16,7 +16,7 @@ export async function getCategory(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };

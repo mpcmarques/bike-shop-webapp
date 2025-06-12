@@ -1,11 +1,12 @@
 "use server";
 
+import { IProductData } from "@/types";
 import { API_URL } from "../lib/constants";
 
 export async function searchProducts(
   name: string,
   queryString?: { [key: string]: string | undefined },
-) {
+): Promise<{ data?: IProductData[]; error?: string }> {
   const url = new URL(`${API_URL}/product/search/${name}`);
 
   if (queryString)
@@ -23,7 +24,7 @@ export async function searchProducts(
   if (response.ok) {
     const data = await response.json();
 
-    return data;
+    return { data };
   }
 
   return { error: response.statusText };
