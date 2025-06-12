@@ -67,7 +67,7 @@ This application uses a **document-based (MongoDB/Mongoose)** data model, with t
 
 - **Price calculation**:
   - Sum the prices of all selected parts/options.
-  - If a combination has a special price (e.g., matte finish on full-suspension), use the correct price for that combination.
+  - If the product is composed, the price is the sum of all selected variant parts (ex: variant: Full-suspension Matte Finish, master: Full-Suspension).
 
 #### c. Adding to Cart
 
@@ -99,18 +99,21 @@ This application uses a **document-based (MongoDB/Mongoose)** data model, with t
 
 #### b. Adding a New Part Choice (e.g., Rim Color)
 
-- Marcus adds a new variant or updates a composed product:
+- Marcus adds a new variant:
   - In the UI, Marcus selects the master product (e.g., a bike) and adds a new variant (e.g., rim color "green").
   - The new variant is created as a Product document with the appropriate variation attribute.
   - The master product's `variants` array is updated to include the new variant.
 
+- Marcus adds a new combination to a composed product:
+  - In the UI, Marcus chooses the categories and master products of a new available combination.
+  - The composed product's `composed` array is updated to include the new possible combination.
+
 #### c. Setting Prices
 
-- Marcus can update the price of a product or variant via the admin UI.
+- Marcus can update the price of a master, variant or composed product via the admin UI.
 - To specify special pricing for combinations:
-  - Marcus creates or updates a variant with the specific combination (e.g., matte finish + full-suspension) and sets its price.
-  - The UI allows Marcus to specify which combinations have special pricing.
-  - The database stores these as separate variant products with the correct price.
+  - Marcus creates or updates a variant included in a combined product.
+  - The UI allows Marcus to specify which combinations are possible on a combined product.
 
 ---
 
@@ -131,18 +134,30 @@ This application uses a **document-based (MongoDB/Mongoose)** data model, with t
 #### Calculating Price
 
 - The backend calculates the price using the selected product and combination:
-  - For composed products, sums the prices of all selected parts.
+  - For composed products, sums the prices of all selected parts (based on selected variant prices).
   - For variants, uses the variant's price.
-  - For special combinations, uses the price of the specific variant.
 
 ---
 
 ### 5. Security, Validation, and Technology
 
+#### Backend:
+
 - **Authentication:** JWT-based, with login and protected endpoints.
 - **Authorization:** Role-based, using guards and decorators.
 - **Validation:** All DTOs use `class-validator` for request validation; Mongoose schemas enforce required fields and types.
 - **Tech Stack:** NestJS, Mongoose, TypeScript, bcrypt, JWT, class-validator, event-driven updates.
+
+#### Frontend:
+- **Next.js (App Router):** Main framework for SSR/SSG and routing.
+- **React 19:** UI components and client-side interactivity.
+- **TypeScript:** Type safety across the codebase.
+- **Tailwind CSS:** Utility-first CSS for styling.
+- **NextAuth.js v5:** Authentication and session management.
+- **React Hook Form:** Form state management and validation.
+- **Zod:** Schema validation for forms and API requests.
+- **React Icons:** Iconography.
+- **use-debounce:** Debounced input handling for search.
 
 ---
 
