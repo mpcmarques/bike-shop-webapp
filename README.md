@@ -4,6 +4,8 @@
 
 ### 1. Data Model
 
+Better described in the Backend API project : https://github.com/mpcmarques/demo-bike-shop-api
+
 This application uses a **document-based (MongoDB/Mongoose)** data model, with the following main entities:
 
 #### Category
