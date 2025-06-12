@@ -4,7 +4,6 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiDoorOpen, BiKey, BiMailSend } from "react-icons/bi";
-import { redirect } from "next/navigation";
 import {
   signInFormData,
   signInSchema,
@@ -12,6 +11,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInputField from "@/components/FormInput";
 import ErrorCard from "@/components/ErrorCard";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
   const {
@@ -20,6 +20,7 @@ const Login = () => {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<signInFormData>({ resolver: zodResolver(signInSchema) });
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<{ email: string; password: string }> = async (
     data,
@@ -31,7 +32,7 @@ const Login = () => {
         redirect: false,
       });
 
-      redirect("/");
+      router.replace("/");
     } catch (error) {
       setError("root", {
         message: error?.message || "An error occurred during sign in.",

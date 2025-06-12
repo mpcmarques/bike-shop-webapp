@@ -31,7 +31,7 @@ export default async function RootLayout({
       >
         <NextAuthProvider>
           <div className="h-full w-full flex flex-col gap-4 relative">
-            {/* <Menu /> */}
+            <Menu />
 
             <div className="h-full w-full absolute t-0 l-0">{children}</div>
           </div>
