@@ -1,4 +1,4 @@
-import { getCategories } from "@/app/actions/getCategories";
+import { getCategories } from "@/actions/getCategories";
 import EditProductForm from "../components/EditProductForm";
 import ErrorCard from "@/components/ErrorCard";
 

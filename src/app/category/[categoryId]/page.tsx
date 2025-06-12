@@ -1,4 +1,4 @@
-import { getCategoryProducts } from "@/app/actions/getCategoryProducts";
+import { getCategoryProducts } from "@/actions/getCategoryProducts";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";

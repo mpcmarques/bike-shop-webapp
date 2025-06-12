@@ -1,6 +1,6 @@
 "use server";
 
-import { getProduct } from "@/app/actions/getProduct";
+import { getProduct } from "@/actions/getProduct";
 import AddToCartButton from "@/components/addToCartButton";
 import Price from "@/components/price";
 import {

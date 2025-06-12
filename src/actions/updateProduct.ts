@@ -1,25 +1,23 @@
 "use server";
 
-import { ICategoryData } from "@/types";
-import { auth } from "../api/auth/[...nextauth]/auth";
+import { IProduct } from "@/types";
+import { auth } from "../app/api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 
-export async function deleteCategory(
-  data: ICategoryData,
+export async function updateProduct(
+  data: IProduct,
 ): Promise<{ data?: any; error?: string }> {
   const session = await auth();
 
-  if (!session) return { error: "Not Authorized" };
+  if (!session) return { error: "Not authorized" };
 
-  const response = await fetch(`${API_URL}/category`, {
-    method: "DELETE",
+  const response = await fetch(`${API_URL}/product`, {
+    method: "PUT",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify({
-      id: data._id,
-    }),
+    body: JSON.stringify(data),
   });
 
   if (response.ok) {

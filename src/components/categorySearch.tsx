@@ -1,6 +1,6 @@
 "use client";
 
-import { searchCategory } from "@/app/actions/searchCategory";
+import { searchCategory } from "@/actions/searchCategory";
 import { ICategoryData } from "@/types";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -17,7 +17,7 @@ const CategorySearch = ({
     setText(text);
 
     if (text.length > 2) {
-      const data = await searchCategory(text);
+      const { data } = await searchCategory(text);
 
       setValues(data || []);
     }

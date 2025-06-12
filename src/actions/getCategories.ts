@@ -1,28 +1,23 @@
 "use server";
 
-import { auth } from "../api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
-import {
-  createCategoryFormData,
-  createCategorySchema,
-} from "../lib/validation/createCategorySchema";
+import { auth } from "../app/api/auth/[...nextauth]/auth";
+import { ICategoryData } from "@/types";
 
-export async function updateCategory(
-  data: createCategoryFormData,
-): Promise<{ data?: any; error?: string }> {
-  const validData = createCategorySchema.parse(data);
-
+export async function getCategories(): Promise<{
+  data?: ICategoryData[];
+  error?: string;
+}> {
   const session = await auth();
 
   if (!session) return { error: "Not Authorized" };
 
   const response = await fetch(`${API_URL}/category`, {
-    method: "PUT",
+    method: "GET",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify(validData),
   });
 
   if (response.ok) {

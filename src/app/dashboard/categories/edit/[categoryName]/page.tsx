@@ -1,4 +1,4 @@
-import { getCategory } from "@/app/actions/getCategory";
+import { getCategory } from "@/actions/getCategory";
 import EditCategoryForm from "../../components/EditCategoryForm";
 
 export default async function EditCategory({ params }) {

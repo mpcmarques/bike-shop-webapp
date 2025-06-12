@@ -1,26 +1,23 @@
 "use server";
 
-import { API_URL } from "../lib/constants";
 import { IProductData } from "@/types";
-import { auth } from "../api/auth/[...nextauth]/auth";
-import { redirect } from "next/navigation";
+import { auth } from "../app/api/auth/[...nextauth]/auth";
+import { API_URL } from "../lib/constants";
 
-export async function addToCart(
+export async function removeFromCart(
   data: IProductData,
-  quantity: number,
-  combination?: IProductData[],
 ): Promise<{ data?: any; error?: string }> {
   const session = await auth();
 
-  if (!session) return redirect("/login");
+  if (!session) return { error: "Not authorized" };
 
   const response = await fetch(`${API_URL}/user/cart`, {
-    method: "POST",
+    method: "DELETE",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${session.accessToken}`,
     },
-    body: JSON.stringify({ productId: data._id, quantity, combination }),
+    body: JSON.stringify({ productId: data._id }),
   });
 
   if (response.ok) {

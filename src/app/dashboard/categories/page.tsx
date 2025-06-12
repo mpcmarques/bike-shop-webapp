@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { getCategories } from "@/app/actions/getCategories";
+import { getCategories } from "@/actions/getCategories";
 import CategoriesTable from "./components/CategoriesTable";
 import { BiPlus } from "react-icons/bi";
 import ErrorCard from "@/components/ErrorCard";

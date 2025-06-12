@@ -1,12 +1,12 @@
 "use client";
 
-import { createCategory } from "@/app/actions/createCategory";
-import { deleteCategory } from "@/app/actions/deleteCategory";
-import { updateCategory } from "@/app/actions/updateCategory";
+import { createCategory } from "@/actions/createCategory";
+import { deleteCategory } from "@/actions/deleteCategory";
+import { updateCategory } from "@/actions/updateCategory";
 import {
   createCategoryFormData,
   createCategorySchema,
-} from "@/app/lib/validation/createCategorySchema";
+} from "@/lib/validation/createCategorySchema";
 import ErrorCard from "@/components/ErrorCard";
 import FormInputField from "@/components/FormInput";
 import FormTextArea from "@/components/FormTextArea";

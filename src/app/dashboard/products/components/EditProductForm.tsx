@@ -1,6 +1,6 @@
 "use client";
 
-import { createProduct } from "@/app/actions/createProduct";
+import { createProduct } from "@/actions/createProduct";
 import ProductSearch from "@/components/productSearch";
 import {
   ICategoryData,
@@ -12,9 +12,9 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import VariationAttributeSelector from "./VariationAttributeSelector";
 import ComposedCombinationsSelector from "./ComposedCombinationsSelector";
 import { useCallback, useTransition } from "react";
-import { updateProduct } from "@/app/actions/updateProduct";
+import { updateProduct } from "@/actions/updateProduct";
 import { redirect } from "next/navigation";
-import { deleteProduct } from "@/app/actions/deleteProduct";
+import { deleteProduct } from "@/actions/deleteProduct";
 import ErrorCard from "@/components/ErrorCard";
 
 interface IEditProductFormProps {

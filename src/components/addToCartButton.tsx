@@ -1,6 +1,6 @@
 "use client";
 
-import { addToCart } from "@/app/actions/addToCart";
+import { addToCart } from "@/actions/addToCart";
 import { IProductData } from "@/types";
 import { useSession } from "next-auth/react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useTransition } from "react";
@@ -37,8 +37,8 @@ const AddToCartButton: React.FC<IAddToCartButton> = ({
       {product.stock <= 0
         ? "Out of Stock"
         : isPending
-        ? "Adding to Cart..."
-        : "Add to Cart"}
+          ? "Adding to Cart..."
+          : "Add to Cart"}
     </button>
   );
 };

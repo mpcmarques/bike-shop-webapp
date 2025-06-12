@@ -4,8 +4,11 @@ import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiBuilding, BiKey, BiMailSend, BiUserPlus } from "react-icons/bi";
 import { redirect } from "next/navigation";
-import { signUp } from "../actions/signUp";
-import { signUpFormData, signUpSchema } from "../lib/validation/signUpSchema";
+import { signUp } from "../../actions/signUp";
+import {
+  signUpFormData,
+  signUpSchema,
+} from "../../lib/validation/signUpSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInputField from "@/components/FormInput";
 import ErrorCard from "@/components/ErrorCard";

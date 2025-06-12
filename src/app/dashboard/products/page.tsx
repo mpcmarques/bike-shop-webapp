@@ -1,6 +1,6 @@
 import Link from "next/link";
 import ProductsTable from "./components/ProductsTable";
-import { getProducts } from "@/app/actions/getProducts";
+import { getProducts } from "@/actions/getProducts";
 import { BiPlus } from "react-icons/bi";
 import ErrorCard from "@/components/ErrorCard";
 

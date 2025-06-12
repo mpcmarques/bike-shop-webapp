@@ -1,6 +1,6 @@
 "use server";
 
-import { auth } from "../api/auth/[...nextauth]/auth";
+import { auth } from "../app/api/auth/[...nextauth]/auth";
 import { API_URL } from "../lib/constants";
 import {
   createCategoryFormData,

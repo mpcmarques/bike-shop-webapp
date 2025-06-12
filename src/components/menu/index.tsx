@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Profile from "./profile";
 import { BiSolidHome } from "react-icons/bi";
-import { getMenuCategories } from "../actions/getMenuCategories";
+import { getMenuCategories } from "../../actions/getMenuCategories";
 import ErrorCard from "@/components/ErrorCard";
 import { ICategoryData } from "@/types";
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { removeFromCart } from "@/app/actions/removeFromCart";
+import { removeFromCart } from "@/actions/removeFromCart";
 import { IProductData } from "@/types";
 import { useSession } from "next-auth/react";
 import { ButtonHTMLAttributes, DetailedHTMLProps, useTransition } from "react";

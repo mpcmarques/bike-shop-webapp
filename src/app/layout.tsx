@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Menu from "./menu";
+import Menu from "../components/menu";
 import { NextAuthProvider } from "./authProvider";
 
 const geistSans = Geist({
@@ -31,7 +31,7 @@ export default async function RootLayout({
       >
         <NextAuthProvider>
           <div className="h-full w-full flex flex-col gap-4 relative">
-            <Menu />
+            {/* <Menu /> */}
 
             <div className="h-full w-full absolute t-0 l-0">{children}</div>
           </div>

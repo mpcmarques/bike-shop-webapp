@@ -5,7 +5,10 @@ import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { BiDoorOpen, BiKey, BiMailSend } from "react-icons/bi";
 import { redirect } from "next/navigation";
-import { signInFormData, signInSchema } from "../lib/validation/signInSchema";
+import {
+  signInFormData,
+  signInSchema,
+} from "../../lib/validation/signInSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormInputField from "@/components/FormInput";
 import ErrorCard from "@/components/ErrorCard";

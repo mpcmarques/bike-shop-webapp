@@ -1,6 +1,6 @@
-import { getCategories } from "@/app/actions/getCategories";
+import { getCategories } from "@/actions/getCategories";
 import EditProductForm from "../../components/EditProductForm";
-import { getProduct } from "@/app/actions/getProduct";
+import { getProduct } from "@/actions/getProduct";
 import { IProductData } from "@/types";
 
 export default async function EditProduct({ params }) {

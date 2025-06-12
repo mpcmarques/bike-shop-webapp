@@ -1,4 +1,4 @@
-import { calculateCartProductPrice } from "@/app/lib/productPriceHelper";
+import { calculateCartProductPrice } from "@/lib/productPriceHelper";
 import { IProductData } from "@/types";
 import { useMemo } from "react";
 

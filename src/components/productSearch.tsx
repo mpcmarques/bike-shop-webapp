@@ -1,6 +1,6 @@
 "use client";
 
-import { searchProducts } from "@/app/actions/searchProducts";
+import { searchProducts } from "@/actions/searchProducts";
 import { ICategoryData, IProductData } from "@/types";
 import { useState } from "react";
 import { BiSearch } from "react-icons/bi";
