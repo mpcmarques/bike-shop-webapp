@@ -1,81 +1,158 @@
-# Bike Shop Web App – Solution Summary
+# Bike Shop Web App 
 
-## Overview
+## Solution Analysis: Data Model, User Actions, and Workflows
 
-This project is a full-stack web application for a customizable bicycle shop, allowing users to browse, customize, and purchase bikes and related products. The app supports user authentication, admin dashboards, product/category management, and a dynamic cart system.
+### 1. Data Model
 
----
+This application uses a **document-based (MongoDB/Mongoose)** data model, with the following main entities:
 
-## Technologies Utilized
+#### Category
 
-- **Next.js (App Router):** Main framework for SSR/SSG and routing.
-- **React 19:** UI components and client-side interactivity.
-- **TypeScript:** Type safety across the codebase.
-- **Tailwind CSS:** Utility-first CSS for styling (`src/app/globals.css`).
-- **NextAuth.js v5:** Authentication and session management (`src/app/api/auth/[...nextauth]/auth.ts`).
-- **React Hook Form:** Form state management and validation.
-- **Zod:** Schema validation for forms and API requests (`src/app/lib/validation/`).
-- **React Icons:** Iconography.
-- **use-debounce:** Debounced input handling for search.
+- **Fields:**  
+  - `name` (string): Unique name of the category (e.g., "bicycles").
+  - `label` (string): Display label.
+  - `description` (string): Description for UI.
+  - `showInMenu` (boolean): Whether to show in navigation.
 
----
+#### Product
 
-## Authentication & Authorization
+- **Fields:**  
+  - `sku` (UUID): Unique product identifier.
+  - `name` (string): Unique product name.
+  - `label` (string): Display label.
+  - `description` (string): Product description.
+  - `image` (string): Image URL.
+  - `category` (ObjectId): Reference to a Category.
+  - `variationAttributes` (array): List of attributes (e.g., color, finish, size) and their values.
+  - `listPrice` (number): Base price.
+  - `salesPrice` (number): Discounted price.
+  - `stock` (number): Inventory count.
+  - `productType` (enum): `'master'`, `'variant'`, or `'composed'`.
+  - `masterProduct` (ObjectId): Reference to the master product (for variants).
+  - `variants` (array): References to variant products.
+  - `composed` (array): For composed products, a 2D array of `{ category, product }` objects.
 
-- **Authentication:**  
-  - Handled via NextAuth.js with a custom credentials provider.
-  - On login, credentials are validated and exchanged for a JWT (`access_token`) from the backend API.
-  - The JWT is stored in the session and used for authenticated API requests.
-  - Session data is enriched with user profile info fetched from the backend (`src/app/api/auth/[...nextauth]/auth.ts`).
+#### User
 
-- **Authorization Guards:**  
-  - Middleware (`src/middleware.ts`) restricts access to `/dashboard` routes to admin users only, using `withAdmin`.
-  - `withUser` can be used for user-level protection.
-  - Guards check the session and user roles, redirecting unauthorized users to `/login` or `/`.
-
----
-
-## Request & Schema Validation
-
-- **Form Validation:**  
-  - All forms use React Hook Form with Zod schemas for validation (e.g., `signUpSchema`, `signInSchema`, `createCategorySchema`).
-  - Validation errors are displayed inline using components like `ErrorCard`.
-
-- **API Request Validation:**  
-  - Before sending data to the backend, forms are validated against Zod schemas.
-  - Server actions (e.g., `createCategory`, `signUp`) parse and validate input before making API calls.
-
----
-
-## Features & Structure
-
-- **Product & Category Management:**  
-  - Admin dashboard for CRUD operations on products and categories.
-  - Product types: master, variant, composed (with dynamic combinations and stock management).
-  - Category and product search with debounced input.
-
-- **Cart & Checkout:**  
-  - Authenticated users can add/remove products to/from their cart.
-  - Cart state is synced with the backend and session.
-  - Price calculation supports composed products and dynamic combinations (`calculateCartProductPrice`).
-
-- **UI/UX:**  
-  - Responsive, modern UI with Tailwind CSS.
-  - Components for forms, tables, search, and product customization.
+- **Fields:**  
+  - `firstName`, `lastName`, `address`, `floor`, `door`, `postalCode`, `city`, `email`, `password`, `salt`
+  - `roles` (array): User roles (`user`, `admin`)
+  - `cart`:
+    - `items`: Array of cart items:
+      - `product`: Reference to Product
+      - `quantity`: Number
+      - `combination`: Array of Product references (for composed/custom builds)
+    - `total`: Cart total price
 
 ---
 
-## Security
+### 2. Main User Actions
 
-- **Session Management:**  
-  - JWT tokens are stored in secure, HTTP-only cookies.
-  - All sensitive API requests include the bearer token for authorization.
+#### a. Browsing Products
 
-- **Input Validation:**  
-  - All user input is validated both client-side and server-side before processing.
+- Users can browse categories and products.
+- Products are fetched with their variants and available options.
+
+#### b. Viewing a Product Page
+
+- The UI displays:
+  - Product image, label, description, price.
+  - Customization options (e.g., frame type, finish, wheels, rim color, chain).
+  - Only options in stock are shown.
+  - Prohibited combinations are filtered out (handled in business logic/UI).
+
+- **Available options** are determined by:
+  - Filtering variants and composed options by stock and business rules.
+  - Excluding combinations that are not possible (e.g., mountain wheels only with full-suspension).
+
+- **Price calculation**:
+  - Sum the prices of all selected parts/options.
+  - If a combination has a special price (e.g., matte finish on full-suspension), use the correct price for that combination.
+
+#### c. Adding to Cart
+
+- When "Add to Cart" is clicked:
+  - The selected product/variant/composed combination and quantity are sent to the backend.
+  - The backend validates stock and business rules.
+  - The user's cart is updated:
+    - Adds a new item with the product, quantity, and combination.
+    - Recalculates the cart total.
+  - Cart is persisted in the user's document in the database.
+
+#### d. Checkout
+
+- User reviews cart.
 
 ---
 
-## Extensibility
+### 3. Administrative Workflows
 
-- The system is designed to support new product types and categories, with flexible schema definitions and dynamic UI components.
+#### a. New Product Creation
+
+- Marcus (admin) uses an admin UI to create a new product.
+- Required information:
+  - Name, label, description, image, category, price(s), stock, product type, variation attributes, composed parts (if any).
+- The product is saved in the database.
+- If it's a variant, it's linked to its master product.
+- If it's composed, references to its parts are stored.
+
+#### b. Adding a New Part Choice (e.g., Rim Color)
+
+- Marcus adds a new variant or updates a composed product:
+  - In the UI, Marcus selects the master product (e.g., a bike) and adds a new variant (e.g., rim color "green").
+  - The new variant is created as a Product document with the appropriate variation attribute.
+  - The master product's `variants` array is updated to include the new variant.
+
+#### c. Setting Prices
+
+- Marcus can update the price of a product or variant via the admin UI.
+- To specify special pricing for combinations:
+  - Marcus creates or updates a variant with the specific combination (e.g., matte finish + full-suspension) and sets its price.
+  - The UI allows Marcus to specify which combinations have special pricing.
+  - The database stores these as separate variant products with the correct price.
+
+---
+
+### 4. UI and Backend Logic
+
+#### Product Page UI
+
+- Shows all available options (filtered by stock and business rules).
+- Disables or hides prohibited combinations.
+- Dynamically updates price as the user selects options.
+
+#### Calculating Available Options
+
+- The backend provides all variants/combinations.
+- The frontend filters out-of-stock and prohibited combinations.
+- The backend can also enforce these rules for security.
+
+#### Calculating Price
+
+- The backend calculates the price using the selected product and combination:
+  - For composed products, sums the prices of all selected parts.
+  - For variants, uses the variant's price.
+  - For special combinations, uses the price of the specific variant.
+
+---
+
+### 5. Security, Validation, and Technology
+
+- **Authentication:** JWT-based, with login and protected endpoints.
+- **Authorization:** Role-based, using guards and decorators.
+- **Validation:** All DTOs use `class-validator` for request validation; Mongoose schemas enforce required fields and types.
+- **Tech Stack:** NestJS, Mongoose, TypeScript, bcrypt, JWT, class-validator, event-driven updates.
+
+---
+
+### 6. Summary Table of Main Collections
+
+| Collection | Key Fields | Relationships | Purpose |
+|------------|------------|---------------|---------|
+| Category   | name, label, description, showInMenu | Has many Products | Organize products |
+| Product    | sku, name, label, description, image, category, variationAttributes, listPrice, salesPrice, stock, productType, masterProduct, variants, composed | Belongs to Category, may have variants, may be composed | Sellable items and their options |
+| User       | firstName, lastName, address, email, password, roles, cart | Cart references Products | Customers/admins, shopping cart |
+
+---
+
+**This model supports customizable products, variant management, composed builds, stock and price management, and secure, validated user actions.**
