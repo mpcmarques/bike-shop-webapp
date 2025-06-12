@@ -58,7 +58,7 @@ This application uses a **document-based (MongoDB/Mongoose)** data model, with t
 - The UI displays:
   - Product image, label, description, price.
   - Customization options (e.g., frame type, finish, wheels, rim color, chain).
-  - Only options in stock are shown.
+  - Out of stock options shows as not selectable.
   - Prohibited combinations are filtered out (handled in business logic/UI).
 
 - **Available options** are determined by:
@@ -95,6 +95,7 @@ This application uses a **document-based (MongoDB/Mongoose)** data model, with t
 - The product is saved in the database.
 - If it's a variant, it's linked to its master product.
 - If it's composed, references to its parts are stored.
+- All master products should have at least 1 default variant.
 
 #### b. Adding a New Part Choice (e.g., Rim Color)
 
